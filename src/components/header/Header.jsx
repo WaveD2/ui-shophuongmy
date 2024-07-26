@@ -150,6 +150,7 @@ const Header = () => {
                   return (
                     <li className="nav-menu-item" key={menu.id}>
                       <Link
+                        state={menu.menuText}
                         to={menu.menuLink}
                         className="nav-menu-link text-base font-medium text-gray"
                       >
@@ -182,6 +183,15 @@ const Header = () => {
             >
               <img src={staticImages.heart} alt="" />
             </Link>
+
+            <Link
+              to="/cart"
+              className={`icon-link ${location.pathname === "/cart" ? "active" : ""
+                } inline-flex items-center justify-center`}
+            >
+              <img src={staticImages.cart} alt="" />
+            </Link>
+
             <Link
               to="/account"
               className={`icon-link ${location.pathname === "/account" ||
@@ -192,13 +202,7 @@ const Header = () => {
             >
               <img src={staticImages.user} alt="" />
             </Link>
-            <Link
-              to="/cart"
-              className={`icon-link ${location.pathname === "/cart" ? "active" : ""
-                } inline-flex items-center justify-center`}
-            >
-              <img src={staticImages.cart} alt="" />
-            </Link>
+
           </IconLinksWrapper>
         </div>
       </Container>

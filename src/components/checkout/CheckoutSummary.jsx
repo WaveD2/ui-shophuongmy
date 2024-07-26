@@ -78,7 +78,7 @@ const CheckoutSummary = () => {
   return (
     <CheckoutSummaryWrapper>
       <h4 className="text-xxl font-bold text-outersapce">
-        Checkout Order Summary
+        Sản phẩm
       </h4>
       <div className="order-list grid">
         {orderData[0]?.items?.map((order) => {
@@ -114,22 +114,22 @@ const CheckoutSummary = () => {
       <ul className="order-info">
         <li className="flex items-center justify-between">
           <span className="text-outerspace font-bold text-lg">
-            Subtotal <span className="text-gray font-semibold">(3 items)</span>
+            Tạm tính
           </span>
-          <span className="text-outerspace font-bold text-lg">$513.00</span>
+          <span className="text-outerspace font-bold text-lg">513.000đ </span>
         </li>
         <li className="flex items-center justify-between">
-          <span className="text-outerspace font-bold text-lg">Savings</span>
-          <span className="text-outerspace font-bold text-lg">-$30.00</span>
+          <span className="text-outerspace font-bold text-lg">Giảm giá </span>
+          <span className="text-outerspace font-bold text-lg">-300.000đ</span>
         </li>
         <li className="flex items-center justify-between">
-          <span className="text-outerspace font-bold text-lg">Shipping</span>
-          <span className="text-outerspace font-bold text-lg">-$5.00</span>
+          <span className="text-outerspace font-bold text-lg">Phí vận chuyển</span>
+          <span className="text-outerspace font-bold text-lg">20.000đ</span>
         </li>
         <li className="list-separator"></li>
         <li className="flex items-center justify-between">
-          <span className="text-outerspace font-bold text-lg">Total</span>
-          <span className="text-outerspace font-bold text-lg">$478.00</span>
+          <span className="text-outerspace font-bold text-lg">Tổng cộng</span>
+          <span className="text-outerspace font-bold text-lg">VND 568,100₫</span>
         </li>
       </ul>
     </CheckoutSummaryWrapper>

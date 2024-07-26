@@ -26,8 +26,8 @@ import ProtectedRoute from "../provider/Protected";
 
 const routes = [
     { path: "/", element: Home },
+    { path: "/product/detail/:id", element: ProductDetails },
     { path: "/product/:type", element: ProductList },
-    { path: "/product/details", element: ProductDetails },
     { path: "/cart", element: Cart },
     { path: "/empty_cart", element: CartEmpty },
     { path: "/sign_in", element: SignIn },
@@ -39,10 +39,10 @@ const routes = [
     { path: "*", element: NotFound },
     { path: "/empty_wishlist", element: WishListEmpty },
 
-
+    // element: ProtectedRoute,
 
     // Auth
-    { path: "/checkout", element: ProtectedRoute, children: Checkout },
+    { path: "/checkout", element: Checkout },
     { path: "/order", element: ProtectedRoute, children: Order },
     { path: "/order_detail", element: ProtectedRoute, children: OrderDetail },
     { path: "/wishlist", element: ProtectedRoute, children: WishList },

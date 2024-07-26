@@ -17,10 +17,10 @@ const HomeScreen = () => {
       <Featured />
       <NewArrival />
       <SavingZone />
-      <Catalog catalogTitle={"Bộ Sưu Tập Bé Trai"} products={mensCatalog} />
-      <Catalog catalogTitle={"Bộ Sưu Tập Bé Gái"} products={womensCatalog} />
+      <Catalog catalogTitle={"Bộ Sưu Tập Bé Trai"} slug="set-be-trai" />
+      <Catalog catalogTitle={"Bộ Sưu Tập Bé Gái"} slug="set-be-gai" />
       <Brands />
-      <Catalog catalogTitle={"Siêu Phẩm Bán Chạy"} products={limelightCatalog} />
+      <Catalog catalogTitle={"Siêu Phẩm Bán Chạy"} slug="quan-ao-be-sale" />
       <Feedback />
     </HomeScreenWrapper>
   );

@@ -4,6 +4,9 @@ import Title from "../common/Title";
 import { savingZoneData } from "../../data/data";
 import { BaseLinkOutlineWhite } from "../../styles/button";
 import { breakpoints } from "../../styles/themes/default";
+import { useEffect, useState } from "react";
+import { apiClient } from "../../api/axios";
+import ENDPOINTS from "../../api/endpoins";
 
 const ProductGridWrapper = styled.div`
   grid-template-columns: repeat(6, 1fr);
@@ -108,39 +111,62 @@ const ProductCardOverlayWrapper = styled.div`
 `;
 
 const SavingZone = () => {
+
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategory() {
+      try {
+        const data = await apiClient.get(ENDPOINTS.CATEGORY);
+
+        if (!data?.length) setCategories([]);
+
+        setCategories(data.data.items);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+    fetchCategory();
+  }, []);
+
+  console.log("categories :", categories);
+
   return (
     <Section>
       <Container>
-        <Title titleText={"Big Saving Zone"} />
+        <Title titleText={"Flash Sale"} />
         <ProductGridWrapper className="grid">
-          {savingZoneData?.map((savingZone) => {
+          {categories?.map((categorie) => {
             return (
               <ProductCardOverlayWrapper
                 className="product-card-overlay text-white"
-                key={savingZone.id}
+                key={categorie.id}
               >
                 <img
-                  src={savingZone.imgSource}
+                  src={categorie?.bannerImg}
                   className="object-fit-cover"
                   alt=""
                 />
                 <div className="product-info text-end w-full h-full">
-                  {savingZone.isLimited && (
+                  {/* {categorie.isLimited && (
                     <div className="info-badge text-white text-xs bg-outerspace inline-flex items-center justify-center">
                       Limited Stock
                     </div>
-                  )}
+                  )} */}
                   <h4 className="info-title font-semibold">
-                    {savingZone?.title}
+                    {categorie?.name}
                   </h4>
-                  <p className="info-text text-base">
-                    {savingZone.description}
-                  </p>
-                  <p className="discount-text text-bold text-xxl uppercase">
-                    upto {savingZone.discount}% off
-                  </p>
+                  {/* <p className="info-text text-base">
+                    {categorie.description}
+                  </p> */}
+                  {/* <p className="discount-text text-bold text-xxl uppercase">
+                    upto {categorie.discount}% off
+                  </p> */}
                   <div className="info-arrow flex items-center justify-center text-xxl">
-                    <i className="bi bi-arrow-down"></i>
+                    <i className="bi bi-arrow-down">
+                      {/* {categorie?.slug} */}
+                    </i>
                   </div>
                   <BaseLinkOutlineWhite
                     as={BaseLinkOutlineWhite}

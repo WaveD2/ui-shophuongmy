@@ -42,10 +42,10 @@ const BreadcrumbItem = ({ item, isLast }) => {
   return (
     <>
       <Link
+        style={{ pointerEvents: `${item?.disabled ? "none" : "auto"}`, color: 'gray' }}
         to={item.link}
-        className={`breadcrumb-item text-base ${
-          isLast ? "text-outerspace font-semibold" : "text-gray font-medium"
-        }`}
+        className={`breadcrumb-item text-base ${isLast ? "text-outerspace font-semibold" : "text-gray font-medium"
+          }`}
       >
         {item.label}
       </Link>

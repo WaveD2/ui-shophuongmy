@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import { Container, ContentStylings, Section } from "../../styles/styles";
 import Breadcrumb from "../../components/common/Breadcrumb";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import ProductList from "../../components/product/ProductList";
 import { products } from "../../data/data";
 import Title from "../../components/common/Title";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductFilter from "../../components/product/ProductFilter";
+import { useEffect, useState } from "react";
 
 const ProductsContent = styled.div`
   grid-template-columns: 320px auto;
@@ -87,10 +88,30 @@ const DescriptionContent = styled.div`
 `;
 
 const ProductListScreen = () => {
-  const breadcrumbItems = [
-    { label: "Shop", link: "/" },
-    { label: "Danh sách sản phẩm", link: "/product/:all" },
-  ];
+
+  const { state, pathname } = useLocation();
+
+  const [breadcrumbItems, setBreadcrumbItems] = useState(
+    [
+      { label: "Trang chủ", link: "/" },
+      { label: "Tất cả", link: "prodcut/:all", disabled: true },
+    ]
+  )
+  useEffect(() => {
+
+    if (!state || !pathname) {
+      breadcrumbItems[1] = { label: "Tất cả", link: "prodcut/:all", disabled: true }
+    }
+
+    breadcrumbItems[1] = { label: state, link: pathname, disabled: true }
+
+    setBreadcrumbItems([...breadcrumbItems]);
+
+  }, [pathname && state])
+
+
+
+
   return (
     <main className="page-py-spacing">
       <Container>
@@ -110,7 +131,9 @@ const ProductListScreen = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="text-lg font-semibold">
+                  <Link
+                    style={{ pointerEvents: "none", color: 'gray' }}
+                    to="/" className="text-lg font-semibold">
                     Recommended
                   </Link>
                 </li>
@@ -121,7 +144,7 @@ const ProductListScreen = () => {
         </ProductsContent>
       </Container>
       <Section>
-        {/* <Container>
+        <Container>
           <DescriptionContent>
             <Title titleText={"Clothing for Everyone Online"} />
             <ContentStylings className="text-base content-stylings">
@@ -152,10 +175,11 @@ const ProductListScreen = () => {
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi
                 laborum dolorem deserunt aperiam voluptate mollitia.
               </p>
-              <Link to="/">See More</Link>
+              {/* <Link />See More</Link> */}
+              <p>See more</p>
             </ContentStylings>
           </DescriptionContent>
-        </Container> */}
+        </Container>
       </Section>
     </main>
   );

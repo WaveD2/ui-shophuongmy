@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 
 export const loginSchema = yup.object().shape({
-    userName: yup.string().required('Vui lòng nhập tài khoản'),
+    username: yup.string().required('Vui lòng nhập tài khoản'),
     password: yup.string().required('Vui lòng nhập mật khẩu').min(8, 'Mật khẩu phải có độ dài tối đa 8 ký tự'),
 });
 

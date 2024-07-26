@@ -3,6 +3,8 @@ import { Input } from "../../styles/form";
 import { BaseButtonGreen } from "../../styles/button";
 import CheckoutSummary from "./CheckoutSummary";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
+import ShippingPayment from "./ShippingPayment.jsx";
+import {useState} from "react";
 
 const BillingOrderWrapper = styled.div`
   gap: 60px;
@@ -95,29 +97,31 @@ const BillingDetailsWrapper = styled.div`
 `;
 
 const Billing = () => {
+
+  const [isDisplayPaymentMethod , setIsDisplayPaymentMethod] = useState(false);
+
   return (
     <BillingOrderWrapper className="billing-and-order grid items-start">
       <BillingDetailsWrapper>
-        <h4 className="text-xxl font-bold text-outerspace">Billing Details</h4>
-        <form className="checkout-form">
+        <form className="checkout-form" style={{ display : `${isDisplayPaymentMethod ? "none" : "block"} `}}>
           <div className="input-elem-group elem-col-2">
             <div className="input-elem">
               <label
                 htmlFor=""
                 className="text-base text-outerspace font-semibold"
               >
-                First Name*
+                Họ và tên*
               </label>
-              <Input type="text" placeholder="First Name" />
+              <Input type="text" placeholder="Họ và tên " />
             </div>
             <div className="input-elem">
               <label
                 htmlFor=""
                 className="text-base text-outerspace font-semibold"
               >
-                Last Name*
+                Email*
               </label>
-              <Input type="text" placeholder="Last Name" />
+              <Input type="text" placeholder="Email" />
             </div>
           </div>
           <div className="input-elem-group elem-col-2">
@@ -126,43 +130,21 @@ const Billing = () => {
                 htmlFor=""
                 className="text-base text-outerspace font-semibold"
               >
-                Country / Region*
+                Số điện thoại
               </label>
-              <Input type="text" placeholder="Country / Region" />
+              <Input type="text" placeholder="Số điện thoại" />
             </div>
             <div className="input-elem">
               <label
                 htmlFor=""
                 className="text-base text-outerspace font-semibold"
               >
-                Company Name
+                Địa chỉ
               </label>
-              <Input type="text" placeholder="Company (optional)" />
+              <Input type="text" placeholder="Địa chỉ" />
             </div>
           </div>
-          <div className="input-elem-group elem-col-2">
-            <div className="input-elem">
-              <label
-                htmlFor=""
-                className="text-base text-outerspace font-semibold"
-              >
-                Street Address*
-              </label>
-              <Input type="text" placeholder="House number and street name" />
-            </div>
-            <div className="input-elem">
-              <label
-                htmlFor=""
-                className="text-base text-outerspace font-semibold"
-              >
-                Apt, suite, unit
-              </label>
-              <Input
-                type="text"
-                placeholder="apartment, suite, unit, etc. (optional)"
-              />
-            </div>
-          </div>
+
           <div className="input-elem-group elem-col-3">
             <div className="input-elem">
               <label
@@ -198,27 +180,18 @@ const Billing = () => {
               <Input type="text" placeholder="Postal Code" />
             </div>
           </div>
-          <div className="input-elem-group elem-col-2">
-            <div className="input-elem">
-              <label
-                htmlFor=""
-                className="text-base text-outerspace font-semibold"
-              >
-                Phone*
-              </label>
-              <Input type="text" placeholder="Phone" />
-            </div>
-          </div>
-          <BaseButtonGreen type="submit" className="contd-delivery-btn">
-            Continue to delivery
+
+          <BaseButtonGreen  onClick={()=> setIsDisplayPaymentMethod(true)} type="button" className="contd-delivery-btn">
+            Tiếp tục đến phương thức thanh toán
           </BaseButtonGreen>
-          <div className="input-check-group flex items-center flex-wrap">
-            <Input type="checkbox" />
-            <p className="text-base">
-              Save my information for a faster checkout
-            </p>
-          </div>
+
         </form>
+
+
+         <div style={{ display : `${isDisplayPaymentMethod ? "block" : "none"} `}}>
+            <ShippingPayment />
+         </div>
+
       </BillingDetailsWrapper>
       <CheckoutSummary />
     </BillingOrderWrapper>

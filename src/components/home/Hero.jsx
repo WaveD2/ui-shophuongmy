@@ -165,6 +165,7 @@ const Hero = () => {
     ],
   };
 
+
   return (
     <SectionHeroWrapper>
       <HeroSliderWrapper>

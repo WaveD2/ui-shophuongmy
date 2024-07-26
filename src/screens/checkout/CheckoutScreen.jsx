@@ -23,10 +23,8 @@ const CheckoutScreen = () => {
   return (
     <CheckoutScreenWrapper>
       <Container>
-        <Title titleText={"Check Out"} />
+        <Title titleText={"Thanh toán"} />
         <Billing />
-        <div className="horiz-line-separator w-full"></div>
-        <ShippingPayment />
       </Container>
     </CheckoutScreenWrapper>
   );

@@ -15,6 +15,8 @@ import { setUser } from "../../redux/slices/userSlice";
 // import showToast from "../../utils/toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { apiClient } from "../../api/axios";
+import ENDPOINTS from "../../api/endpoins";
 
 
 const SignInScreenWrapper = styled.section`
@@ -52,34 +54,40 @@ const SignInScreen = () => {
   const navigate = useNavigate();
 
   const [infoUser, setInfoUser] = useState({
-    userName: "",
+    username: "",
     password: ""
   })
 
-  const [validationErrors, setValidationErrors] = useState({
-  })
+  const [validationErrors, setValidationErrors] = useState({})
+
+
+  async function fetchCategory() {
+    try {
+      const data = await apiClient.post(ENDPOINTS.USERS, infoUser);
+
+
+      if (!data?.length && data?.message) return;
+      console.log("data :", data);
+
+      // navigate('/');
+      return dispatch(setUser(data.data.user))
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationError = await validateData(infoUser, loginSchema);
 
-    setValidationErrors(validationError)
 
-    if (Object.keys(validationErrors).length === 0 && !validationError) {
-      Object.keys(infoUser).map((key) => {
+    if (validationError) {
+      setValidationErrors(validationError)
+    }
 
-        if (infoUser.key !== INFO_USER[key]) {
-          setValidationErrors({
-            password: `Thông tin tài khoản chưa chính xác`
-          })
-        }
-        return
-      })
-
-
-      navigate('/');
-      return dispatch(setUser(INFO_USER))
+    if (!Object.keys(validationErrors).length && !validationError) {
+      fetchCategory();
     }
   }
 
@@ -117,21 +125,21 @@ const SignInScreen = () => {
 
               <div>
                 <FormElement>
-                  <label htmlFor="userName" className="form-elem-label">
+                  <label htmlFor="username" className="form-elem-label">
                     Email hoặc Số điện thoại
                   </label>
                   <Input
-                    value={infoUser.userName}
+                    value={infoUser.username}
                     type="text"
                     onChange={(e) => handlerChangeValue({
-                      typeF: "userName",
+                      typeF: "username",
                       valueF: e.target.value
                     })}
                     placeholder=""
-                    name="userName"
+                    name="username"
                     className="form-elem-control"
                   />
-                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.userName && validationErrors?.userName}</span></div>
+                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.username && validationErrors?.username}</span></div>
                 </FormElement>
 
 

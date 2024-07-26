@@ -3,13 +3,14 @@ import { Container } from "../../styles/styles";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import { product_one } from "../../data/data";
 import ProductPreview from "../../components/product/ProductPreview";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { BaseLinkGreen } from "../../styles/button";
 import { currencyFormat } from "../../utils/helper";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductDescriptionTab from "../../components/product/ProductDescriptionTab";
 import ProductSimilar from "../../components/product/ProductSimilar";
 import ProductServices from "../../components/product/ProductServices";
+import { useEffect, useState } from "react";
 
 const DetailsScreenWrapper = styled.main`
   margin: 40px 0;
@@ -182,6 +183,22 @@ const ProductColorWrapper = styled.div`
 `;
 
 const ProductDetailsScreen = () => {
+
+  const { id } = useParams();
+
+  const [scroll, setScroll] = useState(window.scrollY)
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+
+
+  console.log("id product:::", id);
+
+  // call api get product detail
+
   const stars = Array.from({ length: 5 }, (_, index) => (
     <span
       key={index}
