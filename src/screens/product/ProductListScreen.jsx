@@ -3,11 +3,13 @@ import { Container, ContentStylings, Section } from "../../styles/styles";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ProductList from "../../components/product/ProductList";
-import { products } from "../../data/data";
+// import { products } from "../../data/data";
 import Title from "../../components/common/Title";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductFilter from "../../components/product/ProductFilter";
 import { useEffect, useState } from "react";
+import ENDPOINTS from "../../api/endpoins";
+import { apiClient } from "../../api/axios";
 
 const ProductsContent = styled.div`
   grid-template-columns: 320px auto;
@@ -89,6 +91,7 @@ const DescriptionContent = styled.div`
 
 const ProductListScreen = () => {
 
+  const { slug } = useParams();
   const { state, pathname } = useLocation();
 
   const [breadcrumbItems, setBreadcrumbItems] = useState(
@@ -97,6 +100,11 @@ const ProductListScreen = () => {
       { label: "Tất cả", link: "prodcut/:all", disabled: true },
     ]
   )
+
+  const [products, setProducts] = useState([]);
+  const [optionNames, setOptionNames] = useState([]);
+
+
   useEffect(() => {
 
     if (!state || !pathname) {
@@ -109,8 +117,27 @@ const ProductListScreen = () => {
 
   }, [pathname && state])
 
+  useEffect(() => {
+    async function fetchCategory() {
+      try {
+        const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/?filter[slug]=${slug}`);
+        if (!data?.data?.items.length) {
+          setProducts([]);
+          setOptionNames([]);
+        }
 
+        const itemNamesAndSlugs = data.data.items.map(item => ({ id: item.id, name: item.name, slug: item.slug }));
+        const allProducts = data.data.items.flatMap(item => item.products);
 
+        setProducts(allProducts);
+        setOptionNames(itemNamesAndSlugs)
+
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+    fetchCategory();
+  }, [slug]);
 
   return (
     <main className="page-py-spacing">
@@ -118,7 +145,7 @@ const ProductListScreen = () => {
         <Breadcrumb items={breadcrumbItems} />
         <ProductsContent className="grid items-start">
           <ProductsContentLeft>
-            <ProductFilter />
+            <ProductFilter productsType={optionNames} />
           </ProductsContentLeft>
           <ProductsContentRight>
             <div className="products-right-top flex items-center justify-between">

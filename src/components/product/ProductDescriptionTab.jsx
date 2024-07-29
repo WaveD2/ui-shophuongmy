@@ -116,7 +116,7 @@ const DescriptionTabsWrapper = styled.div`
   }
 `;
 
-const ProductDescriptionTab = () => {
+const ProductDescriptionTab = ({ des }) => {
   const [activeDesTab, setActiveDesTab] = useState(
     productDescriptionTabHeads[0].tabHead
   );
@@ -186,12 +186,7 @@ const ProductDescriptionTab = () => {
                   <li>Rate convection stitsching.</li>
                 </ul>
                 <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Beatae ipsam nostrum praesentium nulla deleniti, facere
-                  mollitia dolore laboriosam, non iure deserunt alias repellat
-                  perspiciatis asperiores ab quia nam tenetur voluptate sint
-                  animi! Vitae aliquam cupiditate iste fuga expedita? Odio,
-                  impedit?
+                  {des}
                 </p>
                 <p>
                   Lorem ipsum dolor sit, amet consectetur adipisicing elit.

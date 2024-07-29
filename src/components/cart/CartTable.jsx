@@ -59,12 +59,12 @@ const CartTableWrapper = styled.table`
 
 const CartTable = ({ cartItems }) => {
   const CART_TABLE_HEADS = [
-    "Product details",
-    "Price",
-    "Quantity",
-    "Shipping",
-    "Subtotal",
-    "Action",
+    "Sản phẩm",
+    "Tiền",
+    "Số lượng",
+    " ",
+    "Giá tiền",
+    " ",
   ];
 
   return (
@@ -75,9 +75,8 @@ const CartTable = ({ cartItems }) => {
             {CART_TABLE_HEADS?.map((column, index) => (
               <th
                 key={index}
-                className={`bg-outerspace text-white font-semibold capitalize text-base ${
-                  index === CART_TABLE_HEADS.length - 1 ? " text-center" : ""
-                }`}
+                className={`bg-outerspace text-white font-semibold capitalize text-base ${index === CART_TABLE_HEADS.length - 1 ? " text-center" : ""
+                  }`}
               >
                 {column}
               </th>

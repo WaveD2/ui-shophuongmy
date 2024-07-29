@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Container, Section } from "../../styles/styles";
 import Title from "../common/Title";
-import { savingZoneData } from "../../data/data";
 import { BaseLinkOutlineWhite } from "../../styles/button";
 import { breakpoints } from "../../styles/themes/default";
 import { useEffect, useState } from "react";
@@ -111,69 +110,51 @@ const ProductCardOverlayWrapper = styled.div`
 `;
 
 const SavingZone = () => {
-
-
-  const [categories, setCategories] = useState([]);
+  const [banners, setBanners] = useState([]);
 
   useEffect(() => {
-    async function fetchCategory() {
+    async function fetchBanners() {
       try {
-        const data = await apiClient.get(ENDPOINTS.CATEGORY);
+        const data = await apiClient.get(ENDPOINTS.BANNER);
 
-        if (!data?.length) setCategories([]);
+        if (!data?.length) setBanners([]);
 
-        setCategories(data.data.items);
+        setBanners(data.data);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error('Error fetching banner:', error);
       }
     }
-    fetchCategory();
+    fetchBanners();
   }, []);
 
-  console.log("categories :", categories);
 
   return (
     <Section>
       <Container>
         <Title titleText={"Flash Sale"} />
         <ProductGridWrapper className="grid">
-          {categories?.map((categorie) => {
+          {banners?.map((banner) => {
             return (
               <ProductCardOverlayWrapper
                 className="product-card-overlay text-white"
-                key={categorie.id}
+                key={banner.id}
               >
                 <img
-                  src={categorie?.bannerImg}
+                  src={banner?.bannerImg}
                   className="object-fit-cover"
                   alt=""
                 />
                 <div className="product-info text-end w-full h-full">
-                  {/* {categorie.isLimited && (
-                    <div className="info-badge text-white text-xs bg-outerspace inline-flex items-center justify-center">
-                      Limited Stock
-                    </div>
-                  )} */}
                   <h4 className="info-title font-semibold">
-                    {categorie?.name}
+                    {banner?.title}
                   </h4>
-                  {/* <p className="info-text text-base">
-                    {categorie.description}
-                  </p> */}
-                  {/* <p className="discount-text text-bold text-xxl uppercase">
-                    upto {categorie.discount}% off
-                  </p> */}
-                  <div className="info-arrow flex items-center justify-center text-xxl">
-                    <i className="bi bi-arrow-down">
-                      {/* {categorie?.slug} */}
-                    </i>
-                  </div>
+
                   <BaseLinkOutlineWhite
                     as={BaseLinkOutlineWhite}
-                    to="/"
+                    to={`/product/${banner?.slug}`}
                     className="uppercase"
                   >
-                    shop now
+                    Xem ngay
                   </BaseLinkOutlineWhite>
                 </div>
               </ProductCardOverlayWrapper>

@@ -10,13 +10,13 @@ import { BaseButtonBlack } from "../../styles/button";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useState } from "react";
 import { loginSchema, validateData } from "../../validate/validater";
-import { INFO_USER } from "../../validate/const";
 import { setUser } from "../../redux/slices/userSlice";
-// import showToast from "../../utils/toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
+import { debounce } from 'lodash';
+import { tokenUtils } from "../../utils/token";
 
 
 const SignInScreenWrapper = styled.section`
@@ -61,16 +61,17 @@ const SignInScreen = () => {
   const [validationErrors, setValidationErrors] = useState({})
 
 
-  async function fetchCategory() {
+  async function fetchUser() {
     try {
-      const data = await apiClient.post(ENDPOINTS.USERS, infoUser);
+      const response = await apiClient.post(`${ENDPOINTS.AUTH}/login`, infoUser);
 
+      if (!response?.data) return;
 
-      if (!data?.length && data?.message) return;
-      console.log("data :", data);
+      dispatch(setUser(response.data.user))
+      tokenUtils.setToken(response.data.tokens);
+      tokenUtils.setInfoLocal('user_info', response.data.user);
 
-      // navigate('/');
-      return dispatch(setUser(data.data.user))
+      return navigate('/');
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -87,9 +88,10 @@ const SignInScreen = () => {
     }
 
     if (!Object.keys(validationErrors).length && !validationError) {
-      fetchCategory();
+      fetchUser();
     }
   }
+  const debouncedHandleSubmit = debounce(handleSubmit, 300);
 
   const handlerChangeValue = ({ typeF, valueF }) => {
 
@@ -157,7 +159,7 @@ const SignInScreen = () => {
                 >
                   Quên mật khẩu?
                 </Link>
-                <BaseButtonBlack type="submit" className="form-submit-btn" onClick={handleSubmit}>
+                <BaseButtonBlack type="submit" className="form-submit-btn" onClick={debouncedHandleSubmit}>
                   Đăng nhập
                 </BaseButtonBlack>
               </div>

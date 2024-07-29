@@ -26,8 +26,8 @@ import ProtectedRoute from "../provider/Protected";
 
 const routes = [
     { path: "/", element: Home },
-    { path: "/product/detail/:id", element: ProductDetails },
-    { path: "/product/:type", element: ProductList },
+    { path: "/product/details/:id", element: ProductDetails },
+    { path: "/product/:slug", element: ProductList },
     { path: "/cart", element: Cart },
     { path: "/empty_cart", element: CartEmpty },
     { path: "/sign_in", element: SignIn },

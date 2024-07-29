@@ -82,7 +82,7 @@ const ProductPreviewWrapper = styled.div`
 
 const ProductPreview = ({ previewImages }) => {
   const [activePreviewImage, setActivePreviewImage] = useState(
-    previewImages[0].imgSource
+    previewImages[0]
   );
 
   const handlePreviewImageChange = (previewImage) => {
@@ -92,16 +92,16 @@ const ProductPreview = ({ previewImages }) => {
   return (
     <ProductPreviewWrapper className="grid items-center">
       <div className="preview-items w-full">
-        {previewImages.map((previewImage) => {
+        {previewImages.map((previewImage, index) => {
           return (
             <div
               className="preview-item-wrapper"
-              key={previewImage.id}
-              onClick={() => handlePreviewImageChange(previewImage.imgSource)}
+              key={index}
+              onClick={() => handlePreviewImageChange(previewImage)}
             >
               <div className="preview-item">
                 <img
-                  src={previewImage.imgSource}
+                  src={previewImage}
                   alt=""
                   className="object-fit-cover"
                 />

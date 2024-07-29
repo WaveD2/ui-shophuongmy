@@ -34,7 +34,8 @@ const SignUpScreen = () => {
 
   const [infoUser, setInfoUser] = useState({
     userName: "",
-    password: ""
+    password: "",
+    phone: ""
   })
 
   const [validationErrors, setValidationErrors] = useState({
@@ -88,20 +89,56 @@ const SignUpScreen = () => {
               <div>
                 <FormElement>
                   <label htmlFor="userName" className="form-elem-label">
-                    Email hoặc Số điện thoại
+                    Họ Tên *
+                  </label>
+                  <Input
+                    value={infoUser.name}
+                    type="text"
+                    onChange={(e) => handlerChangeValue({
+                      typeF: "name",
+                      valueF: e.target.value
+                    })}
+                    placeholder=""
+                    name="name"
+                    className="form-elem-control"
+                  />
+                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.name && validationErrors?.name}</span></div>
+                </FormElement>
+
+                <FormElement>
+                  <label htmlFor="phone" className="form-elem-label">
+                    Số điện thoại *
+                  </label>
+                  <Input
+                    value={infoUser.phone}
+                    type="text"
+                    onChange={(e) => handlerChangeValue({
+                      typeF: "phone",
+                      valueF: e.target.value
+                    })}
+                    placeholder=""
+                    name="phone"
+                    className="form-elem-control"
+                  />
+                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.phone && validationErrors?.phone}</span></div>
+                </FormElement>
+
+                <FormElement>
+                  <label htmlFor="email" className="form-elem-label">
+                    Email *
                   </label>
                   <Input
                     value={infoUser.userName}
                     type="text"
                     onChange={(e) => handlerChangeValue({
-                      typeF: "userName",
+                      typeF: "email",
                       valueF: e.target.value
                     })}
                     placeholder=""
-                    name="userName"
+                    name="email"
                     className="form-elem-control"
                   />
-                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.userName && validationErrors?.userName}</span></div>
+                  <div style={{ height: "14px" }}> <span className="form-elem-error text-end font-medium">{validationErrors?.email && validationErrors?.email}</span></div>
                 </FormElement>
 
 
@@ -113,29 +150,6 @@ const SignUpScreen = () => {
                   })}
                   errorMsg={validationErrors?.password && validationErrors?.password}
                 />
-
-                {/* <CheckboxGroup>
-                  <li className="flex items-center">
-                    <input type="checkbox" />
-                    <span className="text-sm">
-                      Agree to our
-                      <Link to="/" className="text-underline">
-                        Terms of use
-                      </Link>
-                      <span className="text-space">and</span>
-                      <Link to="/" className="text-underline">
-                        Privacy Policy
-                      </Link>
-                    </span>
-                  </li>
-                  <li className="flex items-center">
-                    <input type="checkbox" />
-                    <span className="text-sm">
-                      Subscribe to our monthly newsletter
-                    </span>
-                  </li>
-                </CheckboxGroup> */}
-
 
 
                 <BaseButtonBlack onClick={handleSubmit} className="form-submit-btn">

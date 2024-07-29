@@ -5,12 +5,14 @@ import { product_one } from "../../data/data";
 import ProductPreview from "../../components/product/ProductPreview";
 import { Link, useParams } from "react-router-dom";
 import { BaseLinkGreen } from "../../styles/button";
-import { currencyFormat } from "../../utils/helper";
+import { formatPriceVND } from "../../utils/helper";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductDescriptionTab from "../../components/product/ProductDescriptionTab";
 import ProductSimilar from "../../components/product/ProductSimilar";
 import ProductServices from "../../components/product/ProductServices";
 import { useEffect, useState } from "react";
+import { apiClient } from "../../api/axios";
+import ENDPOINTS from "../../api/endpoins";
 
 const DetailsScreenWrapper = styled.main`
   margin: 40px 0;
@@ -42,9 +44,10 @@ const ProductDetailsWrapper = styled.div`
     padding: 12px;
   }
 
-  .prod-title {
+  .prod-title , .prod-price , .prod-size {
     margin-bottom: 10px;
-  }
+   }
+
   .rating-and-comments {
     column-gap: 16px;
     margin-bottom: 20px;
@@ -183,83 +186,75 @@ const ProductColorWrapper = styled.div`
 `;
 
 const ProductDetailsScreen = () => {
-
   const { id } = useParams();
 
-  const [scroll, setScroll] = useState(window.scrollY)
+  const [product, setProduct] = useState({});
 
 
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+    async function fetchProduct() {
+      try {
+        const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/${id}`);
+        if (!data?.data?.record) setProduct({});
 
+        setProduct(data?.data?.record);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    }
+    fetchProduct();
+  }, []);
 
-
-  console.log("id product:::", id);
-
-  // call api get product detail
-
-  const stars = Array.from({ length: 5 }, (_, index) => (
-    <span
-      key={index}
-      className={`text-yellow ${index < Math.floor(product_one.rating)
-        ? "bi bi-star-fill"
-        : index + 0.5 === product_one.rating
-          ? "bi bi-star-half"
-          : "bi bi-star"
-        }`}
-    ></span>
-  ));
+  // const stars = Array.from({ length: 5 }, (_, index) => (
+  //   <span
+  //     key={index}
+  //     className={`text-yellow ${index < Math.floor(product_one.rating)
+  //       ? "bi bi-star-fill"
+  //       : index + 0.5 === product_one.rating
+  //         ? "bi bi-star-half"
+  //         : "bi bi-star"
+  //       }`}
+  //   ></span>
+  // ));
 
   const breadcrumbItems = [
     { label: "Shop", link: "/" },
     { label: "Thời trang bé gái", link: "/product/:thoi-trang-be-gai" },
     // { label: "Trend", link: "/product/:thoi-trang-be-gai" },
-
   ];
-
+  console.log("product", product);
   return (
+    Object.keys(product).length > 0 &&
     <DetailsScreenWrapper>
       <Container>
         <Breadcrumb items={breadcrumbItems} />
         <DetailsContent className="grid">
-          <ProductPreview previewImages={product_one.previewImages} />
+          <ProductPreview previewImages={product?.images} />
           <ProductDetailsWrapper>
-            <h2 className="prod-title">{product_one.title}</h2>
-            <div className="flex items-center rating-and-comments flex-wrap">
-              <div className="prod-rating flex items-center">
-                {stars}
-                <span className="text-gray text-xs">{product_one.rating}</span>
-              </div>
-              <div className="prod-comments flex items-start">
-                <span className="prod-comment-icon text-gray">
-                  <i className="bi bi-chat-left-text"></i>
-                </span>
-                <span className="prod-comment-text text-sm text-gray">
-                  {product_one.comments_count} comment(s)
-                </span>
-              </div>
-            </div>
-
+            <h2 className="prod-title">{product?.name}</h2>
             <ProductSizeWrapper>
-              <p className="prod-price text-xl font-bold text-outerspace">
-                {currencyFormat(product_one.price)}
+              <p className="prod-price text-3xl font-bold text-outerspace">
+                {product?.price && formatPriceVND(product?.price, product?.discount)}
+                {
+                  Boolean(product?.discount) &&
+                  <span className="text-gray text-xl" style={{ textDecoration: "line-through", display: "inline-block", marginLeft: "8px" }}>{formatPriceVND(product?.price)}</span>
+                }
               </p>
-              <div className="prod-size-top flex items-center flex-wrap">
-
+              <div className="prod-size flex items-center flex-wrap">
                 <p className="text-lg font-semibold text-outerspace">
                   Chọn size
                 </p>
-                <Link to="/" className="text-lg text-gray font-medium">
+                {/* <Link to="/" className="text-lg text-gray font-medium">
                   bảng size chi tiết &nbsp; <i className="bi bi-arrow-right"></i>
-                </Link>
+                </Link> */}
               </div>
               <div className="prod-size-list flex items-center">
-                {product_one.sizes.map((size, index) => (
-                  <div className="prod-size-item" key={index}>
+                {product?.productItems?.length && product?.productItems.map((product) => (
+                  <div className="prod-size-item" key={product.productId}>
                     <input type="radio" name="size" />
-                    <span className="flex items-center justify-center font-medium text-outerspace text-sm">
-                      {size}
+                    <span className="flex items-center justify-center font-medium text-outerspace text-sm" key={product.id}>
+                      {product.size}
                     </span>
                   </div>
                 ))}
@@ -272,12 +267,13 @@ const ProductDetailsScreen = () => {
                 </p>
               </div>
               <div className="prod-colors-list flex items-center">
-                {product_one?.colors?.map((color, index) => (
-                  <div className="prod-colors-item" key={index}>
+                {product?.productItems?.length && product?.productItems?.map((product) => (
+                  <div className="prod-colors-item" key={product.productId}>
                     <input type="radio" name="colors" />
                     <span
                       className="prod-colorbox"
-                      style={{ background: `${color}` }}
+                      key={product.id}
+                      style={{ background: `${product.color}` }}
                     ></span>
                   </div>
                 ))}
@@ -298,11 +294,12 @@ const ProductDetailsScreen = () => {
             <ProductServices />
           </ProductDetailsWrapper>
         </DetailsContent>
-        <ProductDescriptionTab />
-        <ProductSimilar />
+        <ProductDescriptionTab des={product?.description} />
+        <ProductSimilar slug={product?.category?.slug} name={product?.name} />
       </Container>
-    </DetailsScreenWrapper>
-  );
+    </DetailsScreenWrapper >
+  )
+
 };
 
 export default ProductDetailsScreen;

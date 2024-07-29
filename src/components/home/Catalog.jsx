@@ -6,13 +6,15 @@ import { useEffect, useState } from "react";
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
 
-const Catalog = ({ catalogTitle, slug }) => {
+const Catalog = ({ catalogTitle, slugs }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     async function fetchCategory() {
       try {
-        const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/${slug}`);
+        const filterSlugParams = slugs.map(slug => `filter[slug]=${encodeURIComponent(slug)}`).join('&');
+
+        const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/?${filterSlugParams}`);
         if (!data?.data?.items.length) setProducts([]);
 
         setProducts(data.data.items);

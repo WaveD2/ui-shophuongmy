@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { BaseButtonGreen } from "../../styles/button";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
+import { useNavigate } from "react-router-dom";
 
 const CartSummaryWrapper = styled.div`
   background-color: ${defaultTheme.color_flash_white};
@@ -32,26 +33,27 @@ const CartSummaryWrapper = styled.div`
 `;
 
 const CartSummary = () => {
+  const navigate = useNavigate();
   return (
     <CartSummaryWrapper>
       <ul className="summary-list">
         <li className="summary-item flex justify-between">
-          <span className="font-medium text-outerspace">Sub Total</span>
+          <span className="font-medium text-outerspace">Tạm tính</span>
           <span className="font-medium text-outerspace">$513.00</span>
         </li>
         <li className="summary-item flex justify-between">
-          <span className="font-medium text-outerspace">Shipping</span>
+          <span className="font-medium text-outerspace">Phí vận chuyển</span>
           <span className="font-medium text-outerspace">$5.00</span>
         </li>
         <li className="summary-item flex justify-between">
-          <span className="font-medium text-outerspace">Grand Total</span>
+          <span className="font-medium text-outerspace">Tổng cộng</span>
           <span className="summary-item-value font-bold text-outerspace">
             $518.00
           </span>
         </li>
       </ul>
-      <BaseButtonGreen type="submit" className="checkout-btn">
-        Proceed To Checkout
+      <BaseButtonGreen type="submit" className="checkout-btn" onClick={() => navigate('/checkout')}>
+        Tiếp tục đến phương thức thanh toán
       </BaseButtonGreen>
     </CartSummaryWrapper>
   );

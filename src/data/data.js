@@ -3,22 +3,22 @@ import { staticImages } from "../utils/images";
 const navMenuData = [
   {
     id: "nav-menu-1",
-    menuLink: "/product/:thoi-trang-be-gai",
+    menuLink: "/product/set-be-trai",
     menuText: "Bé gái",
   },
   {
     id: "nav-menu-2",
-    menuLink: "/product/:thoi-trang-be-trai",
+    menuLink: "/product/set-be-gai",
     menuText: "Bé trai",
   },
   {
     id: "nav-menu-3",
-    menuLink: "/product/:phu-kien",
+    menuLink: "/product/set-tre-em",
     menuText: "Phụ kiện",
   },
   {
     id: "nav-menu-4",
-    menuLink: "/product/:combo-set",
+    menuLink: "/product/quan-ao-be-sale",
     menuText: "Combos",
   },
 

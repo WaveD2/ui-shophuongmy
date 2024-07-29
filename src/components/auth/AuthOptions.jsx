@@ -5,6 +5,7 @@ import { defaultTheme } from "../../styles/themes/default";
 
 const SignOptions = styled.div`
   row-gap: 12px;
+ margin-bottom : 12px;
 
   .sign-option {
     column-gap: 12px;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ColorsFilter,
   FilterTitle,
@@ -6,17 +6,29 @@ import {
   PriceFilter,
   ProductCategoryFilter,
   SizesFilter,
-  StyleFilter,
 } from "../../styles/filter";
-import { ProductFilterList, StyleFilterList } from "../../data/data";
 import { staticImages } from "../../utils/images";
 
-const ProductFilter = () => {
+const ProductFilter = ({ productsType }) => {
   const [isProductFilterOpen, setProductFilterOpen] = useState(true);
   const [isPriceFilterOpen, setPriceFilterOpen] = useState(true);
   const [isColorFilterOpen, setColorFilterOpen] = useState(true);
   const [isSizeFilterOpen, setSizeFilterOpen] = useState(true);
   const [isStyleFilterOpen, setStyleFilterOpen] = useState(true);
+
+
+
+  const [productFilterList, setProductFilterList] = useState([{
+    id: "product-filter-1",
+    name: "CO loi xay ra!! "
+  }]);
+
+
+  useEffect(() => {
+    setProductFilterList(productsType);
+  }, [productsType]);
+
+
 
   const toggleFilter = (filter) => {
     switch (filter) {
@@ -83,18 +95,15 @@ const ProductFilter = () => {
           </span>
         </FilterTitle>
         <FilterWrap className={`${!isProductFilterOpen ? "hide" : "show"}`}>
-          {ProductFilterList?.map((productFilter, index) => {
+          {productFilterList?.map((productFilter, index) => {
             return (
               <div className="product-filter-item" key={index}>
-                <div className="filter-item-head w-full flex items-center justify-between"
+                <div className="filter-item-head w-full flex items-center justify-between cursor-pointer"
                 >
                   <label htmlFor={productFilter.id} className="filter-head-title text-base text-gray font-semibold">
-                    {productFilter.title}
+                    {productFilter.name}
                   </label>
                   <input type="checkbox" id={productFilter.id} name={productFilter.id} />
-                  {/* <span className="filter-head-icon text-gray"> */}
-                  {/* <i className="bi bi-chevron-right"></i> */}
-                  {/* </span> */}
                 </div>
               </div>
             );
@@ -312,38 +321,6 @@ const ProductFilter = () => {
           </div>
         </FilterWrap>
       </SizesFilter>
-      {/* <StyleFilter onClick={() => toggleFilter("style")}>
-        <FilterTitle className="flex items-center justify-between">
-          <p className="filter-title-text text-gray text-base font-semibold text-lg">
-            Loại
-          </p>
-          <span
-            className={`text-gray text-xl filter-title-icon ${!isStyleFilterOpen ? "rotate" : ""
-              }`}
-          >
-            <i className="bi bi-chevron-up"></i>
-          </span>
-        </FilterTitle>
-        <FilterWrap className={`${!isStyleFilterOpen ? "hide" : "show"}`}>
-          {StyleFilterList?.map((styleFilter) => {
-            return (
-              <div className="style-filter-item" key={styleFilter.id}>
-                <button
-                  type="button"
-                  className="filter-item-head w-full flex items-center justify-between"
-                >
-                  <span className="filter-head-title text-base text-gray font-semibold">
-                    {styleFilter.title}
-                  </span>
-                  <span className="filter-head-icon text-gray">
-                    <i className="bi bi-chevron-right"></i>
-                  </span>
-                </button>
-              </div>
-            );
-          })}
-        </FilterWrap>
-      </StyleFilter> */}
     </>
   );
 };

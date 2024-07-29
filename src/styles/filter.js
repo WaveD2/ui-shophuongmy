@@ -51,6 +51,7 @@ export const ProductCategoryFilter = styled.div`
 
     &:hover {
       .filter-head-title {
+        cursor : pointer;
         transition: ${defaultTheme.default_transition};
         color: ${defaultTheme.color_sea_green};
       }
@@ -252,11 +253,4 @@ export const SizesFilter = styled.div`
       }
     }
   }
-`;
-
-export const StyleFilter = styled.div`
-    .style-filter-item{
-        padding: 4px 0;
-        margin: 12px 0;
-    }
 `;

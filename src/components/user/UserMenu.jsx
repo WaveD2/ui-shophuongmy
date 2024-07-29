@@ -4,6 +4,7 @@ import Title from "../common/Title";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../redux/slices/userSlice";
+import { tokenUtils } from "../../utils/token";
 
 const NavMenuWrapper = styled.nav`
   margin-top: 32px;
@@ -70,6 +71,14 @@ const UserMenu = () => {
   const dispatch = useDispatch();
 
   const location = useLocation();
+
+  const handleCheckout = () => {
+    dispatch(deleteUser())
+    tokenUtils.removeToken();
+    tokenUtils.removeInfoLocal('user_info');
+    window.location.href = "/";
+  }
+
   return (
     <div>
       <Title titleText={"Hello Richard"} />
@@ -128,7 +137,7 @@ const UserMenu = () => {
               </span>
             </Link>
           </li>
-          <li className="nav-menu-item" onClick={() => dispatch(deleteUser())}>
+          <li className="nav-menu-item" onClick={handleCheckout}>
             <Link to="/" className={`nav-menu-link flex items-center`}>
               <span className="nav-link-icon flex items-center justify-center">
                 <img src="./assets/icons/ac_sign_out.svg" alt="" />

@@ -16,7 +16,6 @@ const CartDiscountWrapper = styled.div`
   }
 
   .coupon-group {
-    margin-top: 20px;
     overflow: hidden;
     border-radius: 6px;
     height: 40px;
@@ -32,9 +31,10 @@ const CartDiscountWrapper = styled.div`
   }
   
   .coupon-btn {
-    padding: 2px 16px;
+    padding: 6px 16px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    height : 100%
   }
 
   .contd-shop-btn {
@@ -46,32 +46,23 @@ const CartDiscountWrapper = styled.div`
 const CartDiscount = () => {
   return (
     <CartDiscountWrapper>
-      <h3 className="text-xxl text-outerspace">Discount Codes</h3>
-      <p className="text-base text-gray">
-        Enter your coupon code if you have one.
-      </p>
+      {/* <h3 className="text-xxl text-outerspace">Mã giảm giá</h3> */}
+
       <form action="">
         <div className="coupon-group flex">
           <Input
             type="text"
             className="coupon-input w-full"
-            placeholder="Search"
+            placeholder="Mã giảm giá"
           />
           <BaseButtonOuterspace
             type="submit"
-            className="coupon-btn no-wrap h-full"
+            className="coupon-btn no-wrap"
           >
-            Apply Coupon
+            Sử dụng
           </BaseButtonOuterspace>
         </div>
       </form>
-      <BaseLinkOutlinePlatinum
-        as={BaseLinkOutlinePlatinum}
-        to="/"
-        className="contd-shop-btn w-full text-gray"
-      >
-        continue shopping
-      </BaseLinkOutlinePlatinum>
     </CartDiscountWrapper>
   );
 };

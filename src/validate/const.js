@@ -26,7 +26,7 @@ export const INFO_USER = {
 export const LABEL_ACCOUNT = [
     {
         label: "Họ và tên",
-        forInput: "userName",
+        forInput: "name",
     },
     {
         label: "Email",
@@ -35,10 +35,6 @@ export const LABEL_ACCOUNT = [
     {
         label: "Số điện thoại",
         forInput: "phone",
-    },
-    {
-        label: "Mật khẩu",
-        forInput: "password",
     },
 ]
 
