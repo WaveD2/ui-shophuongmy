@@ -21,7 +21,7 @@ const commonButtonStyles = css`
   padding-right: 12px;
   transition: ${defaultTheme.default_transition};
   &:hover {
-    transform: scale(0.97);
+    // transform: scale(0.97);
   }
 `;
 

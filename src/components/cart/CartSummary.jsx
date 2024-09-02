@@ -42,7 +42,7 @@ const CartSummary = () => {
           <span className="font-medium text-outerspace">$513.00</span>
         </li>
         <li className="summary-item flex justify-between">
-          <span className="font-medium text-outerspace">Phí vận chuyển</span>
+          <span className="font-medium text-outerspace">Giảm giá</span>
           <span className="font-medium text-outerspace">$5.00</span>
         </li>
         <li className="summary-item flex justify-between">

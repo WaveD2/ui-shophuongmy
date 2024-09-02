@@ -62,22 +62,47 @@ const ProductPreviewWrapper = styled.div`
     }
   }
 
+ .preview-display {
+  width: 100%; 
+  height: 600px; 
+  overflow: hidden;  
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  background-color: #f0f0f0; 
+  position: relative; 
+}
+
+.preview-display img {
+  width: 100%; 
+  height: auto; 
+  object-fit: cover; 
+  transition: opacity 0.2s ease;
+  opacity: 0; 
+  position: absolute; 
+  top: 50%; /* Align center vertically */
+  left: 50%; /* Align center horizontally */
+  transform: translate(-50%, -50%); /* Center image exactly */
+}
+
+@media (max-width: ${breakpoints.md}) {
   .preview-display {
-    height: 600px;
-    overflow: hidden;
-
-    @media (max-width: ${breakpoints.md}) {
-      height: 520px;
-    }
-
-    @media (max-width: ${breakpoints.sm}) {
-      height: 400px;
-    }
-
-    @media (max-width: ${breakpoints.xs}) {
-      height: 320px;
-    }
+    height: 520px; /* Adjust height for medium screens */
   }
+}
+
+@media (max-width: ${breakpoints.sm}) {
+  .preview-display {
+    height: 400px; /* Adjust height for small screens */
+  }
+}
+
+@media (max-width: ${breakpoints.xs}) {
+  .preview-display {
+    height: 320px; /* Adjust height for extra small screens */
+  }
+}
+
 `;
 
 const ProductPreview = ({ previewImages }) => {
@@ -111,8 +136,15 @@ const ProductPreview = ({ previewImages }) => {
         })}
       </div>
       <div className="preview-display">
-        <img src={activePreviewImage} className="object-fit-cover" alt="" />
+        <img
+          src={activePreviewImage}
+          className="object-fit-cover"
+          alt="Preview"
+          loading="lazy" /* Lazy loading */
+          onLoad={(e) => e.currentTarget.style.opacity = 1}
+        />
       </div>
+
     </ProductPreviewWrapper>
   );
 };

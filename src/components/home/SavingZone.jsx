@@ -8,65 +8,18 @@ import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
 
 const ProductGridWrapper = styled.div`
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 20px;
 `;
 
 const ProductCardOverlayWrapper = styled.div`
   position: relative;
-  height: 390px;
+  height: 420px;
   border-radius: 12px;
   overflow: hidden;
 
   @media (max-width: ${breakpoints.sm}) {
     height: 360px;
-  }
-
-  &:nth-child(1) {
-    grid-column: 1/3;
-    @media (max-width: ${breakpoints.lg}) {
-      grid-column: 1/4;
-    }
-    @media (max-width: ${breakpoints.md}) {
-      grid-column: 1/7;
-    }
-  }
-
-  &:nth-child(2) {
-    grid-column: 3/5;
-    @media (max-width: ${breakpoints.lg}) {
-      grid-column: 4/7;
-    }
-    @media (max-width: ${breakpoints.md}) {
-      grid-column: 1/7;
-    }
-  }
-
-  &:nth-child(3) {
-    grid-column: 5/7;
-    @media (max-width: ${breakpoints.lg}) {
-      grid-column: 1/4;
-    }
-    @media (max-width: ${breakpoints.md}) {
-      grid-column: 1/7;
-    }
-  }
-
-  &:nth-child(4) {
-    grid-column: 1/4;
-    @media (max-width: ${breakpoints.lg}) {
-      grid-column: 4/7;
-    }
-    @media (max-width: ${breakpoints.md}) {
-      grid-column: 1/7;
-    }
-  }
-
-  &:nth-child(5) {
-    grid-column: 4/7;
-    @media (max-width: ${breakpoints.lg}) {
-      grid-column: 1/7;
-    }
   }
 
   &::after{
@@ -86,6 +39,7 @@ const ProductCardOverlayWrapper = styled.div`
     z-index: 1;
     padding: 32px 24px;
     width: 230px;
+    text-wrap: nowrap;
 
     .info-badge{
         min-width: 100px;
@@ -109,57 +63,64 @@ const ProductCardOverlayWrapper = styled.div`
   }
 `;
 
-const SavingZone = () => {
-  const [banners, setBanners] = useState([]);
+const SavingZone = ({ slug, banner }) => {
+  const [banners, setBanners] = useState({});
 
   useEffect(() => {
     async function fetchBanners() {
       try {
-        const data = await apiClient.get(ENDPOINTS.BANNER);
+        const data = await apiClient.get(`${ENDPOINTS.BANNER}/${slug}`);
 
-        if (!data?.length) setBanners([]);
+        if (!data?.record) setBanners({});
 
-        setBanners(data.data);
+        setBanners(data.record);
       } catch (error) {
-        console.error('Error fetching banner:', error);
+        console.error('Error fetching banners:', error);
       }
     }
-    fetchBanners();
-  }, []);
+    if (slug) {
+      fetchBanners();
+    }
+  }, [slug]);
 
+  useEffect(() => {
+    if (banner) {
+      setBanners(banner);
+    }
+  }, [banner]);
 
   return (
     <Section>
       <Container>
-        <Title titleText={"Flash Sale"} />
+        <Title titleText={banners.title} />
         <ProductGridWrapper className="grid">
-          {banners?.map((banner) => {
-            return (
+          {Object.keys(banners).length &&
+            (
               <ProductCardOverlayWrapper
                 className="product-card-overlay text-white"
-                key={banner.id}
+                key={banners.id}
               >
                 <img
-                  src={banner?.bannerImg}
+                  src={banners?.bannerImg || bannerImg}
                   className="object-fit-cover"
                   alt=""
                 />
                 <div className="product-info text-end w-full h-full">
-                  <h4 className="info-title font-semibold">
-                    {banner?.title}
-                  </h4>
+                  {/* <h4 className="info-title font-semibold">
+                    {banners?.title}
+                  </h4> */}
 
                   <BaseLinkOutlineWhite
                     as={BaseLinkOutlineWhite}
-                    to={`/product/${banner?.slug}`}
+                    to={`/product/${banners?.slug}`}
                     className="uppercase"
                   >
                     Xem ngay
                   </BaseLinkOutlineWhite>
                 </div>
               </ProductCardOverlayWrapper>
-            );
-          })}
+            )
+          }
         </ProductGridWrapper>
       </Container>
     </Section>

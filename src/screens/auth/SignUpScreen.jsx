@@ -9,10 +9,14 @@ import { staticImages } from "../../utils/images";
 import AuthOptions from "../../components/auth/AuthOptions";
 import { FormElement, Input } from "../../styles/form";
 import PasswordInput from "../../components/auth/PasswordInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BaseButtonBlack } from "../../styles/button";
 import { useState } from "react";
-import { loginSchema, validateData } from "../../validate/validater";
+import { signUpSchema, validateData } from "../../validate/validater";
+import { tokenUtils } from "../../utils/token";
+import { useDispatch } from "react-redux";
+import { apiClient } from "../../api/axios";
+import ENDPOINTS from "../../api/endpoins";
 
 
 const SignUpScreenWrapper = styled.section`
@@ -30,27 +34,41 @@ const SignUpScreenWrapper = styled.section`
 `;
 
 const SignUpScreen = () => {
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [infoUser, setInfoUser] = useState({
-    userName: "",
+    name: "",
+    email: "",
     password: "",
     phone: ""
   })
 
   const [validationErrors, setValidationErrors] = useState({
-
   })
+
+  async function fetchUser() {
+    try {
+      const data = { record: infoUser };
+      const response = await apiClient.post(`${ENDPOINTS.AUTH}/register`, data);
+      if (!response) return;
+
+      return navigate('/sign_in');
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationError = await validateData(infoUser, loginSchema);
+    const validationError = await validateData(infoUser, signUpSchema);
 
     setValidationErrors(validationError)
+    console.log("12", validationErrors);
 
-    if (Object.keys(validationErrors).length === 0) {
-      console.log(infoUser);
+    if (validationErrors && Object.keys(validationErrors).length === 0) {
+      fetchUser();
     }
   }
 
@@ -128,7 +146,7 @@ const SignUpScreen = () => {
                     Email *
                   </label>
                   <Input
-                    value={infoUser.userName}
+                    value={infoUser.email}
                     type="text"
                     onChange={(e) => handlerChangeValue({
                       typeF: "email",

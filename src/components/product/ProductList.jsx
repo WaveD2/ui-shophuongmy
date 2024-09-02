@@ -18,11 +18,10 @@ const ProductListWrapper = styled.div`
 `;
 
 const ProductList = ({ products }) => {
-
   return (
     <ProductListWrapper className="grid">
       {products?.map((product) => {
-        return <ProductItem key={product.id} product={product} />;
+        return <ProductItem key={product._id || product.id} product={product} />;
       })}
     </ProductListWrapper>
   );

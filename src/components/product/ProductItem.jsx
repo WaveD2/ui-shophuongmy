@@ -52,9 +52,9 @@ position: relative;
 `;
 
 const ProductItem = ({ product }) => {
-
+  const productId = product._id ? product._id : product.id;
   return (
-    <ProductCardWrapper key={product.id} to={`/product/details/${product.id}`}>
+    <ProductCardWrapper key={productId} to={`/product/details/${productId}`}>
       {
         Boolean(product?.discount) &&
         <div className="discount-badge">-{product?.discount}%</div>

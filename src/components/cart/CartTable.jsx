@@ -59,11 +59,12 @@ const CartTableWrapper = styled.table`
 
 const CartTable = ({ cartItems }) => {
   const CART_TABLE_HEADS = [
+    "Mã sản phẩm",
     "Sản phẩm",
-    "Tiền",
-    "Số lượng",
-    " ",
+    "Giảm giá",
     "Giá tiền",
+    "Số lượng",
+    "Tổng tiền",
     " ",
   ];
 

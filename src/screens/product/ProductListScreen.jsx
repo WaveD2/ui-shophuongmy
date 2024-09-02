@@ -10,6 +10,7 @@ import ProductFilter from "../../components/product/ProductFilter";
 import { useEffect, useState } from "react";
 import ENDPOINTS from "../../api/endpoins";
 import { apiClient } from "../../api/axios";
+import SavingZone from "../../components/home/SavingZone";
 
 const ProductsContent = styled.div`
   grid-template-columns: 320px auto;
@@ -103,7 +104,7 @@ const ProductListScreen = () => {
 
   const [products, setProducts] = useState([]);
   const [optionNames, setOptionNames] = useState([]);
-
+  const [banner, setBaner] = useState("");
 
   useEffect(() => {
 
@@ -120,17 +121,16 @@ const ProductListScreen = () => {
   useEffect(() => {
     async function fetchCategory() {
       try {
-        const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/?filter[slug]=${slug}`);
-        if (!data?.data?.items.length) {
+        const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/?slug=${slug}`);
+
+        if (!data?.record && !data?.record?.items.length) {
           setProducts([]);
           setOptionNames([]);
         }
 
-        const itemNamesAndSlugs = data.data.items.map(item => ({ id: item.id, name: item.name, slug: item.slug }));
-        const allProducts = data.data.items.flatMap(item => item.products);
-
-        setProducts(allProducts);
-        setOptionNames(itemNamesAndSlugs)
+        setProducts(data?.record?.items[0].products.slice(0, 20) || []);
+        setBaner(data?.record?.items[0].banner || {})
+        setOptionNames(data?.record?.items[0].subCategoryType || [])
 
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -141,6 +141,7 @@ const ProductListScreen = () => {
 
   return (
     <main className="page-py-spacing">
+      <SavingZone banner={banner} />
       <Container>
         <Breadcrumb items={breadcrumbItems} />
         <ProductsContent className="grid items-start">
@@ -166,7 +167,7 @@ const ProductListScreen = () => {
                 </li>
               </ul>
             </div>
-            <ProductList products={products.slice(0, 12)} />
+            <ProductList products={products} />
           </ProductsContentRight>
         </ProductsContent>
       </Container>

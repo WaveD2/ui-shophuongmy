@@ -12,12 +12,14 @@ const Catalog = ({ catalogTitle, slugs }) => {
   useEffect(() => {
     async function fetchCategory() {
       try {
-        const filterSlugParams = slugs.map(slug => `filter[slug]=${encodeURIComponent(slug)}`).join('&');
+
+        const filterSlugParams = slugs.map(slug => `category.slug=${encodeURIComponent(slug)}`).join('&');
 
         const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/?${filterSlugParams}`);
-        if (!data?.data?.items.length) setProducts([]);
 
-        setProducts(data.data.items);
+        if (!data?.record?.items.length) setProducts([]);
+
+        setProducts(data.record.items);
 
       } catch (error) {
         console.error('Error fetching categories:', error);

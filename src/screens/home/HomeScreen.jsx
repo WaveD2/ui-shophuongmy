@@ -16,7 +16,7 @@ const HomeScreen = () => {
       <Hero />
       <Featured />
       <NewArrival />
-      <SavingZone />
+      <SavingZone slug={"sale-he-ruc-ro"} />
       <Catalog catalogTitle={"Bộ Sưu Tập Bé Trai"} slugs={["ao-be-trai", "quan-be-trai"]} />
       <Catalog catalogTitle={"Bộ Sưu Tập Bé Gái"} slugs={["ao-be-gai", "quan-be-gai"]} />
       <Brands />

@@ -69,7 +69,6 @@ const breadcrumbItems = [
 const AccountScreen = () => {
 
   const user = useSelector((state) => state?.user.info_user);
-  console.log("user", user);
   const dispatch = useDispatch();
 
   const [inputValues, setInputValues] = useState(user);

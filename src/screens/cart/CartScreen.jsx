@@ -7,6 +7,8 @@ import CartTable from "../../components/cart/CartTable";
 import { breakpoints } from "../../styles/themes/default";
 import CartDiscount from "../../components/cart/CartDiscount";
 import CartSummary from "../../components/cart/CartSummary";
+import { useSelector } from "react-redux";
+import EmptyCart from "../../components/cart/EmptyCart";
 
 const CartPageWrapper = styled.main`
   padding: 48px 0;
@@ -48,18 +50,38 @@ const CartContent = styled.div`
   }
 `;
 
+
 const CartScreen = () => {
   const breadcrumbItems = [
     { label: "Home", link: "/cart" },
     { label: "Giỏ hàng", link: "" },
   ];
+  const orders = useSelector((state) => state?.order.orderList);
+  console.log("orders:::", orders);
+
+  const carts = orders?.length ? orders.map(cart => {
+    return {
+      code: cart?.code,
+      id: cart?._id || cart.id,
+      name: cart?.name,
+      color: cart?.color,
+      size: cart?.size,
+      price: cart?.price,
+      quantity: cart?.quantity,
+      discount: cart?.discount,
+      imgSource: cart?.images[0],
+    }
+  }) : [];
+
   return (
     <CartPageWrapper>
       <Container>
         <Breadcrumb items={breadcrumbItems} />
         <CartContent className="grid items-start">
           <div className="cart-content-left">
-            <CartTable cartItems={cartItems} />
+
+            {carts.length ? <CartTable cartItems={carts} /> : <EmptyCart />}
+
           </div>
           <div className="grid cart-content-right">
             <CartDiscount />

@@ -60,16 +60,14 @@ const SignInScreen = () => {
 
   const [validationErrors, setValidationErrors] = useState({})
 
-
   async function fetchUser() {
     try {
       const response = await apiClient.post(`${ENDPOINTS.AUTH}/login`, infoUser);
+      if (!response) return;
 
-      if (!response?.data) return;
-
-      dispatch(setUser(response.data.user))
-      tokenUtils.setToken(response.data.tokens);
-      tokenUtils.setInfoLocal('user_info', response.data.user);
+      dispatch(setUser(response.user))
+      tokenUtils.setToken(response.tokens);
+      tokenUtils.setInfoLocal('user_info', response.user);
 
       return navigate('/');
     } catch (error) {

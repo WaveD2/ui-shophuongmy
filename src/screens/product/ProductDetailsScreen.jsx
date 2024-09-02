@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { Container } from "../../styles/styles";
 import Breadcrumb from "../../components/common/Breadcrumb";
-import { product_one } from "../../data/data";
 import ProductPreview from "../../components/product/ProductPreview";
 import { Link, useParams } from "react-router-dom";
-import { BaseLinkGreen } from "../../styles/button";
+import { BaseButtonGreen, BaseLinkGreen } from "../../styles/button";
 import { formatPriceVND } from "../../utils/helper";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductDescriptionTab from "../../components/product/ProductDescriptionTab";
@@ -13,6 +12,10 @@ import ProductServices from "../../components/product/ProductServices";
 import { useEffect, useState } from "react";
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
+import { useDispatch } from "react-redux";
+import { addOrderProduct } from "../../redux/slices/orderSlice";
+import Tooltip from "../../components/tooltip/Tooltip";
+import useDebounce from "../../utils/debounce";
 
 const DetailsScreenWrapper = styled.main`
   margin: 40px 0;
@@ -59,7 +62,7 @@ const ProductDetailsWrapper = styled.div`
     column-gap: 10px;
   }
   .prod-add-btn {
-    min-width: 160px;
+    min-width: 600px;
     column-gap: 8px;
     &-text {
       margin-top: 2px;
@@ -100,6 +103,15 @@ const ProductSizeWrapper = styled.div`
       height: 32px;
     }
 
+    .prod-size-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500; 
+      color: #1f2937; 
+      font-size: 0.875rem;  
+    }
+
     input {
       position: absolute;
       top: 0;
@@ -114,7 +126,8 @@ const ProductSizeWrapper = styled.div`
         height: 32px;
       }
 
-      &:checked + span {
+
+      &:checked + label .prod-size-box{
         color: ${defaultTheme.color_white};
         background-color: ${defaultTheme.color_outerspace};
         border-color: ${defaultTheme.color_outerspace};
@@ -169,11 +182,6 @@ const ProductColorWrapper = styled.div`
       height: 22px;
       opacity: 0;
       cursor: pointer;
-
-      &:checked + span {
-        outline: 1px solid ${defaultTheme.color_gray};
-        outline-offset: 3px;
-      }
     }
 
     .prod-colorbox {
@@ -181,24 +189,58 @@ const ProductColorWrapper = styled.div`
       width: 22px;
       height: 22px;
       display: inline-block;
+      transition: ${defaultTheme.default_transition};
+    }
+
+    input:checked + label .prod-colorbox{
+      outline: 1px solid ${defaultTheme.color_gray};
+      outline-offset: 3px;
     }
   }
 `;
 
+
+
+const QuantityContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+`;
+
+const CartContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 20px;
+  // margin: 0 auto;
+`;
+
+const QuantityDisplay = styled.span`
+  padding: 0 20px;
+  font-size: 18px;
+`;
+
 const ProductDetailsScreen = () => {
+  const dispatch = useDispatch();
+
   const { id } = useParams();
 
   const [product, setProduct] = useState({});
-
+  const [selectedProduct, setSelectedProduct] = useState({
+    quantity: 1,
+    size: "",
+    color: "",
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
     async function fetchProduct() {
       try {
         const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/${id}`);
-        if (!data?.data?.record) setProduct({});
+        if (!data?.record?.length) setProduct({});
 
-        setProduct(data?.data?.record);
+        setProduct(data?.record);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -206,24 +248,31 @@ const ProductDetailsScreen = () => {
     fetchProduct();
   }, []);
 
-  // const stars = Array.from({ length: 5 }, (_, index) => (
-  //   <span
-  //     key={index}
-  //     className={`text-yellow ${index < Math.floor(product_one.rating)
-  //       ? "bi bi-star-fill"
-  //       : index + 0.5 === product_one.rating
-  //         ? "bi bi-star-half"
-  //         : "bi bi-star"
-  //       }`}
-  //   ></span>
-  // ));
+  const incrementQuantity = () => {
+    setSelectedProduct((prevProduct) => ({
+      ...prevProduct,
+      quantity: prevProduct.quantity + 1,
+    }));
+  };
+
+  const decrementQuantity = () => {
+    setSelectedProduct((prevProduct) => ({
+      ...prevProduct,
+      quantity: prevProduct.quantity > 1 ? prevProduct.quantity - 1 : 1,
+    }));
+  };
 
   const breadcrumbItems = [
     { label: "Shop", link: "/" },
     { label: "Thời trang bé gái", link: "/product/:thoi-trang-be-gai" },
     // { label: "Trend", link: "/product/:thoi-trang-be-gai" },
   ];
-  console.log("product", product);
+
+
+  const handlerAddProductToCart = useDebounce((product) => {
+    dispatch(addOrderProduct({ product, ...selectedProduct }))
+  }, 300)
+
   return (
     Object.keys(product).length > 0 &&
     <DetailsScreenWrapper>
@@ -237,7 +286,7 @@ const ProductDetailsScreen = () => {
               <p className="prod-price text-3xl font-bold text-outerspace">
                 {product?.price && formatPriceVND(product?.price, product?.discount)}
                 {
-                  Boolean(product?.discount) &&
+                  !!(product?.discount) &&
                   <span className="text-gray text-xl" style={{ textDecoration: "line-through", display: "inline-block", marginLeft: "8px" }}>{formatPriceVND(product?.price)}</span>
                 }
               </p>
@@ -250,12 +299,17 @@ const ProductDetailsScreen = () => {
                 </Link> */}
               </div>
               <div className="prod-size-list flex items-center">
-                {product?.productItems?.length && product?.productItems.map((product) => (
-                  <div className="prod-size-item" key={product.productId}>
-                    <input type="radio" name="size" />
-                    <span className="flex items-center justify-center font-medium text-outerspace text-sm" key={product.id}>
-                      {product.size}
-                    </span>
+                {product?.variants?.length && product?.variants.map((product) => (
+                  <div className="prod-size-item" key={product._id}
+                    onClick={() => setSelectedProduct({ ...selectedProduct, size: product.size })}>
+                    <input id={`size-${product._id}`} type="radio" name="size" />
+                    <label htmlFor={`size-${product._id}`}>
+                      <Tooltip text={product.size}>
+                        <span className="prod-size-box" key={product._id}>
+                          {product.size}
+                        </span>
+                      </Tooltip>
+                    </label>
                   </div>
                 ))}
               </div>
@@ -267,29 +321,62 @@ const ProductDetailsScreen = () => {
                 </p>
               </div>
               <div className="prod-colors-list flex items-center">
-                {product?.productItems?.length && product?.productItems?.map((product) => (
-                  <div className="prod-colors-item" key={product.productId}>
-                    <input type="radio" name="colors" />
-                    <span
-                      className="prod-colorbox"
-                      key={product.id}
-                      style={{ background: `${product.color}` }}
-                    ></span>
+                {product?.variants?.length && product?.variants?.map((product) => (
+                  <div className="prod-colors-item" key={product._id}
+                    onClick={() => setSelectedProduct({ ...selectedProduct, color: product.color })}>
+                    <input
+                      type="radio"
+                      id={`color-${product._id}`}
+                      name="colors"
+                      disabled={product.stock === 0}
+                    />
+
+                    <label htmlFor={`color-${product._id}`}>
+                      <Tooltip text={product.color}>
+                        <span
+                          className="prod-colorbox"
+                          key={product._id}
+                          style={{ background: `${product.color}` }}
+                        >
+                        </span>
+                      </Tooltip>
+                    </label>
                   </div>
                 ))}
               </div>
             </ProductColorWrapper>
+            <CartContainer>
+              <QuantityContainer>
+                <BaseButtonGreen onClick={decrementQuantity}>
+                  <span style={{ fontSize: "20px" }}>-</span>
+                </BaseButtonGreen>
+                <QuantityDisplay>{selectedProduct?.quantity}</QuantityDisplay>
+                <BaseButtonGreen onClick={incrementQuantity}>
+                  <span style={{ fontSize: "20px" }}>+</span>
+                </BaseButtonGreen>
+              </QuantityContainer>
+              <BaseButtonGreen style={{ width: "100%" }} onClick={() => handlerAddProductToCart(product)}>THÊM VÀO GIỎ</BaseButtonGreen>
+            </CartContainer>
             <div className="btn-and-price flex items-center flex-wrap">
-              <BaseLinkGreen
-                to="/cart"
-                as={BaseLinkGreen}
-                className="prod-add-btn"
-              >
-                <span className="prod-add-btn-icon">
-                  <i className="bi bi-cart2"></i>
-                </span>
-                <span className="prod-add-btn-text">Mua ngay</span>
-              </BaseLinkGreen>
+              <Tooltip text={`${!selectedProduct?.color || !selectedProduct?.size ? "Vui lý chọn màu sắc và hoặc kích cỡ" : ""}`}>
+                <BaseLinkGreen
+                  onClick={() => handlerAddProductToCart(product)}
+                  to="/cart"
+                  as={BaseLinkGreen}
+                  className="prod-add-btn"
+                  style={{
+                    width: "100%", height: "40px", display: "flex", gap: "12px",
+                    pointerEvents: !selectedProduct?.color || !selectedProduct?.size ? "none" : "auto",
+                    opacity: !selectedProduct?.color || !selectedProduct?.size ? 0.8 : 1
+                  }}
+                >
+                  <span className="prod-add-btn-icon">
+                    <i className="bi bi-cart2"></i>
+                  </span>
+
+                  <span className="prod-add-btn-text" >Mua ngay</span>
+                </BaseLinkGreen>
+              </Tooltip>
             </div>
             <ProductServices />
           </ProductDetailsWrapper>

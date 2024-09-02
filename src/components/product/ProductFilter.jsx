@@ -17,18 +17,14 @@ const ProductFilter = ({ productsType }) => {
   const [isStyleFilterOpen, setStyleFilterOpen] = useState(true);
 
 
-
   const [productFilterList, setProductFilterList] = useState([{
     id: "product-filter-1",
     name: "CO loi xay ra!! "
   }]);
 
-
   useEffect(() => {
     setProductFilterList(productsType);
   }, [productsType]);
-
-
 
   const toggleFilter = (filter) => {
     switch (filter) {
