@@ -8,6 +8,8 @@ import { Input, InputGroupWrapper } from "../../styles/form";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../redux/slices/sidebarSlice";
+import SearchComponent from "../common/Search";
+import { useState } from "react";
 
 const NavigationAndSearchWrapper = styled.div`
   column-gap: 20px;
@@ -119,6 +121,101 @@ const IconLinksWrapper = styled.div`
 const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const handlerSearch = (e) => {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      e.preventDefault();
+      console.log(e.target.value);
+      const query = e.target.value;
+      setSearchQuery(query);
+
+
+
+
+      setSearchResults([
+        {
+          id: 1,
+          name: 'Quần short kaki bé trai Rabity 930.008',
+          price: '249,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
+        },
+        {
+          id: 2,
+          name: 'Quần short kaki bé gái Rabity 930.010',
+          price: '199,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
+        },
+        {
+          id: 3,
+          name: 'Quần short jean bé gái Rabity 931.003',
+          price: '259,000₫',
+          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
+        },
+        {
+          id: 4,
+          name: 'Quần short kaki bé gái Rabity 930.009',
+          price: '229,000₫',
+          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
+        },
+        {
+          id: 1,
+          name: 'Quần short kaki bé trai Rabity 930.008',
+          price: '249,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
+        },
+        {
+          id: 2,
+          name: 'Quần short kaki bé gái Rabity 930.010',
+          price: '199,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
+        },
+        {
+          id: 3,
+          name: 'Quần short jean bé gái Rabity 931.003',
+          price: '259,000₫',
+          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
+        },
+        {
+          id: 4,
+          name: 'Quần short kaki bé gái Rabity 930.009',
+          price: '229,000₫',
+          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
+        },
+        {
+          id: 1,
+          name: 'Quần short kaki bé trai Rabity 930.008',
+          price: '249,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
+        },
+        {
+          id: 2,
+          name: 'Quần short kaki bé gái Rabity 930.010',
+          price: '199,000₫',
+          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
+        },
+        {
+          id: 3,
+          name: 'Quần short jean bé gái Rabity 931.003',
+          price: '259,000₫',
+          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
+        },
+        {
+          id: 4,
+          name: 'Quần short kaki bé gái Rabity 930.009',
+          price: '229,000₫',
+          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
+        },
+      ]
+      )
+      // Thực hiện tìm kiếm tại đây
+    }
+  }
+
+  const handleProductClick = (product) => {
+    console.log('Product clicked:', product);
+    // Điều hướng đến trang chi tiết sản phẩm hoặc thực hiện hành động khác
+  };
 
   return (
     <HeaderMainWrapper className="header flex items-center">
@@ -161,7 +258,7 @@ const Header = () => {
                 })}
               </ul>
             </NavigationMenuWrapper>
-            <form className="search-form">
+            <div className="search-form">
               <InputGroupWrapper className="input-group">
                 <span className="input-icon flex items-center justify-center text-xl text-gray">
                   <i className="bi bi-search"></i>
@@ -169,10 +266,19 @@ const Header = () => {
                 <Input
                   type="text"
                   className="input-control w-full"
-                  placeholder="TÌm kiếm"
+                  placeholder="Tìm kiếm"
+                  onChange={handlerSearch}
+                  onKeyDown={handlerSearch}
                 />
               </InputGroupWrapper>
-            </form>
+              {searchQuery && (
+                <SearchComponent
+                  products={searchResults}
+                  onProductClick={handleProductClick}
+                />
+              )}
+            </div>
+
           </NavigationAndSearchWrapper>
 
           <IconLinksWrapper className="flex items-center">
@@ -195,7 +301,7 @@ const Header = () => {
             <Link
               to="/account"
               className={`icon-link ${location.pathname === "/account" ||
-                location.pathname === "/account/add"
+                location.pathname == "/account/add" || location.pathname == "/sign_in" || location.pathname == "/sign_up"
                 ? "active"
                 : ""
                 } inline-flex items-center justify-center`}

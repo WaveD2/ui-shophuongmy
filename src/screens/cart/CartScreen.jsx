@@ -7,8 +7,9 @@ import CartTable from "../../components/cart/CartTable";
 import { breakpoints } from "../../styles/themes/default";
 import CartDiscount from "../../components/cart/CartDiscount";
 import CartSummary from "../../components/cart/CartSummary";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EmptyCart from "../../components/cart/EmptyCart";
+import { tokenUtils } from "../../utils/token";
 
 const CartPageWrapper = styled.main`
   padding: 48px 0;
@@ -56,8 +57,9 @@ const CartScreen = () => {
     { label: "Home", link: "/cart" },
     { label: "Giỏ hàng", link: "" },
   ];
-  const orders = useSelector((state) => state?.order.orderList);
-  console.log("orders:::", orders);
+
+  const orders = tokenUtils.getInfoLocal('orderList') || [];
+  console.log("orders213", orders);
 
   const carts = orders?.length ? orders.map(cart => {
     return {

@@ -124,55 +124,31 @@ const ProductFilter = ({ productsType }) => {
         </FilterTitle>
         <FilterWrap
           className={`range filter-wrap ${!isPriceFilterOpen ? "hide" : "show"
-            }`}
-        >
-          <div className="range-slider">
-            <span
-              className="range-selected h-full bg-sea-green"
-              style={{
-                left: calculateRangePosition(minRange, 1000),
-                right: calculateRangePosition(1000 - maxRange, 1000),
-              }}
-            ></span>
-          </div>
-          <div className="range-input">
-            <input
-              type="range"
-              className="min w-full"
-              min="0"
-              max="1000"
-              value={minRange}
-              step="10"
-              name="min"
-              onChange={handleInputChange}
-            />
-            <input
-              type="range"
-              className="min w-full"
-              min="0"
-              max="1000"
-              value={maxRange}
-              step="10"
-              name="max"
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="range-price w-full flex items-center">
-            <input
-              type="number"
-              className="text-center"
-              name="min"
-              value={minRange}
-              onChange={handleInputChange}
-            />
-            <input
-              type="number"
-              className="text-center"
-              name="max"
-              value={maxRange}
-              onChange={handleInputChange}
-            />
-          </div>
+            }`}>
+          {
+            [{
+              id: "price_1",
+              name: "Giá dưới 100,000₫",
+              // price: { price["$gt"] : "100000" }
+            },
+            {
+              id: "price_2",
+              name: "100,000₫ - 200,000₫",
+              // price: { price["$gt"] : "100000" }
+            }
+            ]?.map((productFilter, index) => {
+              return (
+                <div className="product-filter-item" key={index}>
+                  <div className="filter-item-head w-full flex items-center justify-between cursor-pointer"
+                  >
+                    <label htmlFor={productFilter.id} className="filter-head-title text-base text-gray font-semibold">
+                      {productFilter.name}
+                    </label>
+                    <input type="checkbox" id={productFilter.id} name={productFilter.id} />
+                  </div>
+                </div>
+              );
+            })}
         </FilterWrap>
       </PriceFilter>
 

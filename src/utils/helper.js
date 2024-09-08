@@ -9,7 +9,7 @@ export function formatPriceVND(value) {
     return formattedValue + 'đ';
 }
 
-export function calculateDiscountedPrice({ price, discount }) {
+export function calculateDiscountedPrice({ price, discount = 0 }) {
     if (price < 0 || discount < 0 || discount > 100) {
         throw new Error("Giá trị đầu vào không hợp lệ");
     }

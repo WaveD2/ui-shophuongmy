@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { BaseButtonBlack } from "../../styles/button";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useState } from "react";
-import { loginSchema, validateData } from "../../validate/validater";
+import { validateLogin, validateData } from "../../validate/validater";
 import { setUser } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
@@ -78,14 +78,13 @@ const SignInScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationError = await validateData(infoUser, loginSchema);
-
+    const validationError = await validateData(infoUser, validateLogin);
 
     if (validationError) {
       setValidationErrors(validationError)
     }
 
-    if (!Object.keys(validationErrors).length && !validationError) {
+    if (!Object.keys(validationErrors).length && !Object.keys(validationError).length) {
       fetchUser();
     }
   }
@@ -103,6 +102,7 @@ const SignInScreen = () => {
   }
 
   return (
+
     <SignInScreenWrapper>
       <FormGridWrapper>
         <Container>

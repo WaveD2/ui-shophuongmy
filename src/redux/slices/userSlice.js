@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { INFO_USER } from "../../validate/const";
+import { tokenUtils } from "../../utils/token";
 
 
 
 const initialState = {
-    info_user: {}
+    info_user: tokenUtils.getInfoLocal('user_info') || {},
 };
 
 const userSlice = createSlice({

@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
+import { useDispatch } from "react-redux";
+import { decreaseAmount, increaseAmount } from "../../redux/slices/orderSlice";
+import { useState } from "react";
 
 const CartTableRowWrapper = styled.tr`
   .cart-tbl {
@@ -59,6 +62,11 @@ const CartTableRowWrapper = styled.tr`
 `;
 
 const CartItem = ({ cartItem }) => {
+
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(cartItem.quantity);
+  console.log("quantity::", quantity);
+
   return (
     <CartTableRowWrapper key={cartItem.id}>
       <td>
@@ -90,13 +98,19 @@ const CartItem = ({ cartItem }) => {
       </td>
       <td>
         <div className="cart-tbl-qty flex items-center">
-          <button className="qty-dec-btn">
+          <button className="qty-dec-btn" onClick={() => {
+            dispatch(decreaseAmount({ _id: cartItem.id, size: cartItem.size, color: cartItem.color }));
+            if (quantity > 1) setQuantity(quantity - 1);
+          }}>
             <i className="bi bi-dash-lg"></i>
           </button>
           <span className="qty-value inline-flex items-center justify-center font-medium text-outerspace">
-            {cartItem.quantity}
+            {quantity}
           </span>
-          <button className="qty-inc-btn">
+          <button className="qty-dec-btn" onClick={() => {
+            dispatch(increaseAmount({ _id: cartItem.id, size: cartItem.size, color: cartItem.color }));
+            if (quantity > 1) setQuantity(quantity + 1);
+          }}>
             <i className="bi bi-plus-lg"></i>
           </button>
         </div>
@@ -108,7 +122,7 @@ const CartItem = ({ cartItem }) => {
       </td>
       <td>
         <span className="text-lg font-bold text-outerspace">
-          {cartItem.price * cartItem.quantity}
+          {cartItem.price * quantity}
         </span>
       </td>
       <td>

@@ -38,7 +38,6 @@ export const FilterWrap = styled.div`
       display: block;
     }
   }
-
   &.hide {
     display: none;
   }

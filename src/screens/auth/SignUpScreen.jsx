@@ -12,11 +12,12 @@ import PasswordInput from "../../components/auth/PasswordInput";
 import { Link, useNavigate } from "react-router-dom";
 import { BaseButtonBlack } from "../../styles/button";
 import { useState } from "react";
-import { signUpSchema, validateData } from "../../validate/validater";
+import { validateSignUp, validateData } from "../../validate/validater";
 import { tokenUtils } from "../../utils/token";
 import { useDispatch } from "react-redux";
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
+import showToast from "../../utils/toast";
 
 
 const SignUpScreenWrapper = styled.section`
@@ -51,7 +52,11 @@ const SignUpScreen = () => {
     try {
       const data = { record: infoUser };
       const response = await apiClient.post(`${ENDPOINTS.AUTH}/register`, data);
-      if (!response) return;
+
+      if (!response || !response?.data) {
+        return setValidationErrors(response);
+      }
+      showToast({ message: "Đăng ký tài khoản thành công!", type: 'success' });
 
       return navigate('/sign_in');
     } catch (error) {
@@ -62,12 +67,11 @@ const SignUpScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationError = await validateData(infoUser, signUpSchema);
+    const validationError = await validateData(infoUser, validateSignUp);
 
     setValidationErrors(validationError)
-    console.log("12", validationErrors);
 
-    if (validationErrors && Object.keys(validationErrors).length === 0) {
+    if (Object.keys(validationError).length === 0 && Object.keys(validationErrors).length === 0) {
       fetchUser();
     }
   }

@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import ENDPOINTS from "../../api/endpoins";
 import { apiClient } from "../../api/axios";
 import SavingZone from "../../components/home/SavingZone";
+import Pagination from "../../components/common/Pagination";
+import SelectOption from "../../components/common/SelectOption";
 
 const ProductsContent = styled.div`
   grid-template-columns: 320px auto;
@@ -106,6 +108,31 @@ const ProductListScreen = () => {
   const [optionNames, setOptionNames] = useState([]);
   const [banner, setBaner] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 5;
+
+  const handlePageChange = (page) => {
+    console.log("page:::", page);
+
+    setCurrentPage(page);
+  };
+
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const options = [
+    { label: 'Mặc định', value: 'default' },
+    { label: 'Tên A → Z', value: 'name_asc' },
+    { label: 'Tên Z → A', value: 'name_desc' },
+    { label: 'Giá tăng dần', value: 'price_asc' },
+    { label: 'Giá giảm dần', value: 'price_desc' },
+    { label: 'Hàng mới', value: 'newest' },
+  ];
+
+  const handleOptionChange = (value) => {
+    setSelectedOption(value);
+    console.log("Selected:", value);
+  };
+
   useEffect(() => {
 
     if (!state || !pathname) {
@@ -149,28 +176,22 @@ const ProductListScreen = () => {
             <ProductFilter productsType={optionNames} />
           </ProductsContentLeft>
           <ProductsContentRight>
-            <div className="products-right-top flex items-center justify-between">
+            <div className="products-right-top flex items-center" style={{ "justify-content": "right" }} >
               {/* type product */}
-              <h4 className="text-xxl"></h4>
-              <ul className="products-right-nav flex items-center justify-end flex-wrap">
-                <li>
-                  <Link to="/" className="active text-lg font-semibold">
-                    New
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    style={{ pointerEvents: "none", color: 'gray' }}
-                    to="/" className="text-lg font-semibold">
-                    Recommended
-                  </Link>
-                </li>
-              </ul>
+              <SelectOption label="Sắp xếp:" options={options} onChange={handleOptionChange} styleWrapper={{ "justify-content": "right" }} />
             </div>
             <ProductList products={products} />
           </ProductsContentRight>
+
         </ProductsContent>
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </Container>
+
       <Section>
         <Container>
           <DescriptionContent>
