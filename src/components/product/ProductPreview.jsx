@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { PropTypes } from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 
 const ProductPreviewWrapper = styled.div`
@@ -113,6 +113,10 @@ const ProductPreview = ({ previewImages }) => {
   const handlePreviewImageChange = (previewImage) => {
     setActivePreviewImage(previewImage);
   };
+
+  useEffect(() => {
+    setActivePreviewImage(previewImages[0]);
+  }, [previewImages]);
 
   return (
     <ProductPreviewWrapper className="grid items-center">

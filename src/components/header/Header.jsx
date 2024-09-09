@@ -3,13 +3,15 @@ import { HeaderMainWrapper, SiteBrandWrapper } from "../../styles/header";
 import { Container } from "../../styles/styles";
 import { staticImages } from "../../utils/images";
 import { navMenuData } from "../../data/data";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Input, InputGroupWrapper } from "../../styles/form";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../redux/slices/sidebarSlice";
 import SearchComponent from "../common/Search";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { apiClient } from "../../api/axios";
+import ENDPOINTS from "../../api/endpoins";
 
 const NavigationAndSearchWrapper = styled.div`
   column-gap: 20px;
@@ -120,102 +122,32 @@ const IconLinksWrapper = styled.div`
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [searchResults, setSearchResults] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const handlerSearch = (e) => {
-    if (e.key === 'Enter' || e.keyCode === 13) {
-      e.preventDefault();
-      console.log(e.target.value);
-      const query = e.target.value;
-      setSearchQuery(query);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showResults, setShowResults] = useState(false);
 
-
-
-
-      setSearchResults([
-        {
-          id: 1,
-          name: 'Quần short kaki bé trai Rabity 930.008',
-          price: '249,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
-        },
-        {
-          id: 2,
-          name: 'Quần short kaki bé gái Rabity 930.010',
-          price: '199,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
-        },
-        {
-          id: 3,
-          name: 'Quần short jean bé gái Rabity 931.003',
-          price: '259,000₫',
-          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
-        },
-        {
-          id: 4,
-          name: 'Quần short kaki bé gái Rabity 930.009',
-          price: '229,000₫',
-          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
-        },
-        {
-          id: 1,
-          name: 'Quần short kaki bé trai Rabity 930.008',
-          price: '249,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
-        },
-        {
-          id: 2,
-          name: 'Quần short kaki bé gái Rabity 930.010',
-          price: '199,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
-        },
-        {
-          id: 3,
-          name: 'Quần short jean bé gái Rabity 931.003',
-          price: '259,000₫',
-          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
-        },
-        {
-          id: 4,
-          name: 'Quần short kaki bé gái Rabity 930.009',
-          price: '229,000₫',
-          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
-        },
-        {
-          id: 1,
-          name: 'Quần short kaki bé trai Rabity 930.008',
-          price: '249,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_0_f43e32f452fc4766860fa0f8f4e3b683_medium.jpg', // Đường dẫn đến ảnh giả lập
-        },
-        {
-          id: 2,
-          name: 'Quần short kaki bé gái Rabity 930.010',
-          price: '199,000₫',
-          image: 'https://product.hstatic.net/1000290074/product/4_1_dbcd2ed0cc18475e9c4be0d8f31d47c2_medium.jpg',
-        },
-        {
-          id: 3,
-          name: 'Quần short jean bé gái Rabity 931.003',
-          price: '259,000₫',
-          image: 'https://shophuongmy.s3.ap-southeast-1.amazonaws.com/77fdcf07__quan+ao2.jpg',
-        },
-        {
-          id: 4,
-          name: 'Quần short kaki bé gái Rabity 930.009',
-          price: '229,000₫',
-          image: '"https://shophuongmy.s3.ap-southeast-1.amazonaws.com/2b3fb046__quan+ao1.jpg',
-        },
-      ]
-      )
-      // Thực hiện tìm kiếm tại đây
+  const handlerSearch = async (e) => {
+    e.preventDefault();
+    setSearchQuery(e.target.value);
+    if (e.target.value) {
+      setShowResults(true);
+      const response = await apiClient.get(`${ENDPOINTS.PRODUCTS}?search=${encodeURIComponent(e.target.value)}`);
+      if (response?.record && response?.record?.items.length > 0) setSearchResults(response?.record?.items)
+    } else {
+      setShowResults(false);
     }
-  }
 
+  }
   const handleProductClick = (product) => {
-    console.log('Product clicked:', product);
-    // Điều hướng đến trang chi tiết sản phẩm hoặc thực hiện hành động khác
+    setShowResults(false);
+    setSearchResults([]);
+    setSearchQuery("");
+    return navigate(`/product/details/${product._id}`)
   };
+
 
   return (
     <HeaderMainWrapper className="header flex items-center">
@@ -265,13 +197,23 @@ const Header = () => {
                 </span>
                 <Input
                   type="text"
+                  value={searchQuery}
                   className="input-control w-full"
                   placeholder="Tìm kiếm"
                   onChange={handlerSearch}
                   onKeyDown={handlerSearch}
+                  onFocus={() => setShowResults(true)} // Hiển thị kết quả khi focus vào input
+                  onBlur={() => {
+                    let timeoutId = setTimeout(() => {
+                      setShowResults(false);
+                    }, 100);
+
+                    // Cancel the timeout
+                    clearTimeout(timeoutId);
+                  }}
                 />
               </InputGroupWrapper>
-              {searchQuery && (
+              {searchQuery && searchResults.length > 0 && showResults && (
                 <SearchComponent
                   products={searchResults}
                   onProductClick={handleProductClick}

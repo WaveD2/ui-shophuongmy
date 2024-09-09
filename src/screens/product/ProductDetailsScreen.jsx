@@ -204,7 +204,10 @@ const ProductColorWrapper = styled.div`
 const QuantityContainer = styled.div`
   display: flex;
   align-items: center;
-
+  @media (max-width: ${breakpoints.sm}) {
+     justify-content: space-between;
+      width: 100%;
+  }
 `;
 
 const CartContainer = styled.div`
@@ -213,7 +216,10 @@ const CartContainer = styled.div`
   gap: 12px;
   width: 100%;
   margin-top: 20px;
-  // margin: 0 auto;
+@media (max-width: ${breakpoints.sm}) {
+  flex-wrap: wrap;
+  }
+
 `;
 
 const QuantityDisplay = styled.span`
@@ -246,7 +252,7 @@ const ProductDetailsScreen = () => {
       }
     }
     fetchProduct();
-  }, []);
+  }, [id]);
 
   const incrementQuantity = () => {
     setSelectedProduct((prevProduct) => ({
