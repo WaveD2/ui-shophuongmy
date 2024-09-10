@@ -234,7 +234,7 @@ const Header = () => {
 
             <Link
               to="/cart"
-              className={`icon-link ${location.pathname === "/cart" ? "active" : ""
+              className={`icon-link ${location.pathname === "/cart" || location.pathname === "/order" ? "active" : ""
                 } inline-flex items-center justify-center`}
             >
               <img src={staticImages.cart} alt="" />

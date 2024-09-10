@@ -17,6 +17,13 @@ const AddressScreenWrapper = styled.main`
       border-color: ${defaultTheme.color_silver};
     }
   }
+
+  .form-check-elem {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    flex-flow: row-reverse;
+  }
 `;
 
 const breadcrumbItems = [
@@ -26,6 +33,18 @@ const breadcrumbItems = [
 ];
 
 const AddressScreen = () => {
+
+  const labels = [
+    { label: "Tên*", placeholder: "Tên", type: 'text' },
+    { label: "Họ*", placeholder: "Họ", type: 'text' },
+    { label: "Địa chỉ*", placeholder: "Số nhà và tên đường", type: 'text' },
+    { label: "Thành phố*", placeholder: "Thành phố", type: 'text' },
+    { label: "Tỉnh*", placeholder: "Chọn Tỉnh/Thành phố", type: 'text' },
+    { label: "Số điện thoại*", placeholder: "Số điện thoại", type: 'text' },
+    { label: "Đặt làm địa chỉ giao hàng mặc định", type: 'checkbox' },
+  ];
+
+
   return (
     <AddressScreenWrapper className="page-py-spacing">
       <Container>
@@ -37,172 +56,31 @@ const AddressScreen = () => {
             <h4 className="title-sm">Thêm địa chỉ</h4>
             <form>
               <div className="form-wrapper">
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    First Name*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="First Name"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Last Name*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Last Name"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Contry / Region
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Country/Region"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Company Name*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Company (optional)"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Street Address*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="House number and street name"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Apt, suite, unit*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="apartment, suite, unit,etc. (optional)"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    City*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Town / City"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    State*
-                  </label>
-                  <select className="form-elem-control" name="" id="">
-                    <option value="">State 1</option>
-                    <option value="">State 2</option>
-                  </select>
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Phone*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Phone"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Postal Code*
-                  </label>
-                  <Input
-                    type="text"
-                    className="form-elem-control"
-                    placeholder="Postal Code"
-                  />
-                </FormElement>
-                <FormElement>
-                  <label
-                    htmlFor=""
-                    className="form-label font-semibold text-base"
-                  >
-                    Delivery Instruction
-                  </label>
-                  <Textarea
-                    className="form-elem-control"
-                    placeholder="Delivery Instruction"
-                    name=""
-                    id=""
-                  ></Textarea>
-                </FormElement>
+                {labels.map((title, index) => (
+                  <FormElement key={index} className={`${title.type === 'checkbox' ? 'form-check-elem' : ''}`}>
+                    <label
+                      htmlFor={`${title.label}-${index}`}
+                      className="form-label font-semibold text-base"
+                    >
+                      {title.label}
+                    </label>
+                    <Input
+                      style={{
+                        width: title.type === 'checkbox' && '18px',
+                        height: title.type === 'checkbox' && '18px'
+                      }}
+                      id={`${title.label}-${index}`}
+                      type={title.type}
+                      className="form-elem-control"
+                      placeholder={title.placeholder || ""}
+                    />
+                  </FormElement>
+                ))}
               </div>
-              <FormElement className="form-check-elem flex items-center">
-                <div className="form-elem-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark flex items-center justify-center">
-                    <i className="bi bi-check-lg"></i>
-                  </span>
-                </div>
-                <span>Set as default shipping address</span>
-              </FormElement>
-              <FormElement className="form-check-elem flex items-center">
-                <div className="form-elem-checkbox">
-                  <input type="checkbox" />
-                  <span className="checkmark flex items-center justify-center">
-                    <i className="bi bi-check-lg"></i>
-                  </span>
-                </div>
-                <span>Set as default billing address</span>
-              </FormElement>
               <div className="form-btns flex">
-                <BaseButtonGreen type="submit">Save</BaseButtonGreen>
+                <BaseButtonGreen type="submit">Lưu</BaseButtonGreen>
                 <BaseButtonWhitesmoke type="button">
-                  Cancel
+                  Hủy
                 </BaseButtonWhitesmoke>
               </div>
             </form>
