@@ -58,14 +58,48 @@ const CartTableWrapper = styled.table`
 `;
 
 const CartTable = ({ cartItems }) => {
+  console.log("cartItems::", cartItems);
+
   const CART_TABLE_HEADS = [
-    "Mã sản phẩm",
-    "Sản phẩm",
-    "Giảm giá",
-    "Giá tiền",
-    "Số lượng",
-    "Tổng tiền",
-    " ",
+    {
+      label: "Mã sản phẩm",
+      key: "code",
+      style: "text-center",
+
+    },
+    {
+      label: "Sản phẩm",
+      key: "name",
+      style: "text-left",
+
+    },
+    {
+      label: "Giảm giá",
+      key: "discount",
+      style: "text-center",
+
+    },
+    {
+      label: "Số lượng",
+      key: "quantity",
+      style: "text-center",
+
+    },
+    {
+      label: "Giá tiền",
+      key: "price",
+      style: "text-center",
+
+    },
+    {
+      label: "Tổng tiền",
+      key: "total",
+      style: "text-center",
+    }, {
+      label: "",
+      key: "action",
+      style: "text-center",
+    }
   ];
 
   return (
@@ -76,10 +110,10 @@ const CartTable = ({ cartItems }) => {
             {CART_TABLE_HEADS?.map((column, index) => (
               <th
                 key={index}
-                className={`bg-outerspace text-white font-semibold capitalize text-base ${index === CART_TABLE_HEADS.length - 1 ? " text-center" : ""
+                className={`bg-outerspace text-white font-semibold capitalize text-sm text-nowrap ${column.style}
                   }`}
               >
-                {column}
+                {column.label}
               </th>
             ))}
           </tr>

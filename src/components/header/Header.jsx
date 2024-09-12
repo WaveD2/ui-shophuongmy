@@ -12,6 +12,7 @@ import SearchComponent from "../common/Search";
 import { useEffect, useRef, useState } from "react";
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
+import useDebounce, { useDebounceKeySearch } from "../../utils/debounce";
 
 const NavigationAndSearchWrapper = styled.div`
   column-gap: 20px;
@@ -129,23 +130,69 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
 
-  const handlerSearch = async (e) => {
-    e.preventDefault();
-    setSearchQuery(e.target.value);
-    if (e.target.value) {
-      setShowResults(true);
-      const response = await apiClient.get(`${ENDPOINTS.PRODUCTS}?search=${encodeURIComponent(e.target.value)}`);
-      if (response?.record && response?.record?.items.length > 0) setSearchResults(response?.record?.items)
-    } else {
-      setShowResults(false);
-    }
+  const timeoutIdRef = useRef(null);
 
-  }
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchValue = params.get('search') || "";
+    setSearchQuery(searchValue); // Gán giá trị mặc định cho searchQuery
+  }, []); //
+
+  const handleBlur = () => {
+    timeoutIdRef.current = setTimeout(() => {
+      setShowResults(false);
+    }, 500);
+  };
+
+  const handleFocus = () => {
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+    }
+    setShowResults(true)
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const query = e.target.value;
+    setSearchQuery(query);
+    navigate(`?search=${encodeURIComponent(query)}`, { replace: true });
+  };
+
+  const debouncedSearchQuery = useDebounceKeySearch(searchQuery, 500);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (debouncedSearchQuery) {
+        try {
+          const response = await apiClient.get(`${ENDPOINTS.PRODUCTS}?search=${encodeURIComponent(debouncedSearchQuery)}`);
+          if (response?.record?.items.length > 0) {
+            setSearchResults(response.record.items);
+          } else {
+            setSearchResults([]);
+          }
+        } catch (error) {
+          setShowResults(false);
+          setSearchResults([]);
+        }
+      } else {
+        setShowResults(false);
+        setSearchResults([]);
+      }
+    };
+
+    fetchData();
+  }, [debouncedSearchQuery]);
+
+
   const handleProductClick = (product) => {
     setShowResults(false);
     setSearchResults([]);
     setSearchQuery("");
-    return navigate(`/product/details/${product._id}`)
+    navigate(`/product/details/${product._id}`)
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
+    }
+    return
   };
 
 
@@ -200,20 +247,12 @@ const Header = () => {
                   value={searchQuery}
                   className="input-control w-full"
                   placeholder="Tìm kiếm"
-                  onChange={handlerSearch}
-                  onKeyDown={handlerSearch}
-                  onFocus={() => setShowResults(true)} // Hiển thị kết quả khi focus vào input
-                  onBlur={() => {
-                    let timeoutId = setTimeout(() => {
-                      setShowResults(false);
-                    }, 100);
-
-                    // Cancel the timeout
-                    clearTimeout(timeoutId);
-                  }}
+                  onChange={handleSearch}
+                  onFocus={handleFocus} // Hiển thị kết quả khi focus vào input
+                  onBlur={handleBlur}
                 />
               </InputGroupWrapper>
-              {searchQuery && searchResults.length > 0 && showResults && (
+              {searchQuery && showResults && (
                 <SearchComponent
                   products={searchResults}
                   onProductClick={handleProductClick}

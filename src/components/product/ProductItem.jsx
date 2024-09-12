@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { commonCardStyles } from "../../styles/card";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { calculateDiscountedPrice, formatPriceVND } from "../../utils/helper";
+import { tokenUtils } from "../../utils/token";
+import showToast from "../../utils/toast";
+import useDebounce from "../../utils/debounce";
 
 const ProductCardWrapper = styled(Link)`
 position: relative;
@@ -53,6 +56,19 @@ position: relative;
 
 const ProductItem = ({ product }) => {
   const productId = product._id ? product._id : product.id;
+
+  const handleAddToWishList = useDebounce(() => {
+    const wishlist = tokenUtils.getInfoLocal('wishlists') || [];
+    const index = wishlist.findIndex((item) => item.code === product.code);
+    if (index !== -1) {
+      showToast({ message: "Đã có trong sản phẩm yêu thích", type: "info" });
+    } else {
+      wishlist.push(product);
+      tokenUtils.setInfoLocal('wishlists', wishlist);
+      showToast({ message: "Đã thêm vào sản phẩm yêu thích", type: "success" });
+    }
+  }, 200)
+
   return (
     <ProductCardWrapper key={productId} to={`/product/details/${productId}`}>
       {
@@ -64,6 +80,10 @@ const ProductItem = ({ product }) => {
         <button
           type="button"
           className="product-wishlist-icon flex items-center justify-center bg-white"
+          onClick={(e) => {
+            e.preventDefault();
+            handleAddToWishList();
+          }}
         >
           <i className="bi bi-heart"></i>
         </button>

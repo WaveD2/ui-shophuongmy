@@ -3,7 +3,7 @@ import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import { useDispatch } from "react-redux";
-import { decreaseAmount, increaseAmount } from "../../redux/slices/orderSlice";
+import { decreaseAmount, increaseAmount, removeOrderProduct } from "../../redux/slices/orderSlice";
 import { useState } from "react";
 
 const CartTableRowWrapper = styled.tr`
@@ -65,7 +65,6 @@ const CartItem = ({ cartItem }) => {
 
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(cartItem.quantity);
-  console.log("quantity::", quantity);
 
   return (
     <CartTableRowWrapper key={cartItem.id}>
@@ -74,11 +73,7 @@ const CartItem = ({ cartItem }) => {
           {cartItem.code}
         </span>
       </td>
-      <td>
-        <span className="text-lg font-bold text-outerspace">
-          {cartItem.discount || 0}
-        </span>
-      </td>
+
       <td>
         <div className="cart-tbl-prod grid">
           <div className="cart-prod-img">
@@ -87,7 +82,7 @@ const CartItem = ({ cartItem }) => {
           <div className="cart-prod-info">
             <h4 className="text-base">{cartItem.name}</h4>
             <p className="text-sm text-gray inline-flex">
-              <span className="font-semibold">Color: </span> {cartItem.color}
+              <span className="font-semibold">Màu: </span> {cartItem.color}
             </p>
             <p className="text-sm text-gray inline-flex">
               <span className="font-semibold">Size:</span>
@@ -95,6 +90,11 @@ const CartItem = ({ cartItem }) => {
             </p>
           </div>
         </div>
+      </td>
+      <td>
+        <span className="text-lg font-bold text-outerspace">
+          {cartItem.discount || 0}
+        </span>
       </td>
       <td>
         <div className="cart-tbl-qty flex items-center">
@@ -122,14 +122,18 @@ const CartItem = ({ cartItem }) => {
       </td>
       <td>
         <span className="text-lg font-bold text-outerspace">
-          {cartItem.price * quantity}
+          {cartItem.price * quantity * (1 - cartItem.discount / 100)}
         </span>
       </td>
       <td>
         <div className="cart-tbl-actions flex justify-center">
-          <Link to="/" className="tbl-del-action text-red">
+          <div className="tbl-del-action text-red"
+            onClick={() => {
+              dispatch(removeOrderProduct({ _id: cartItem.id, size: cartItem.size, color: cartItem.color }));
+            }}
+          >
             <i className="bi bi-trash3"></i>
-          </Link>
+          </div>
         </div>
       </td>
     </CartTableRowWrapper>

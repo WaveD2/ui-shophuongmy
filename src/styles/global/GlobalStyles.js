@@ -174,6 +174,10 @@ export const GlobalStyles = createGlobalStyle`
         text-align: center;
     }
 
+    .text-nowrap {
+         text-wrap: nowrap;
+    }
+
     .uppercase {
         text-transform: uppercase;
     }
