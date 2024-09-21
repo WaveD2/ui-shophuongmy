@@ -213,8 +213,8 @@ export const GlobalStyles = createGlobalStyle`
 
     // page
     .page-py-spacing {
-        padding-top: 48px !important;
-        padding-bottom: 48px !important;
+        padding-top: 32px !important;
+        padding-bottom: 32px !important;
 
         @media(max-width: ${breakpoints.lg}){
             padding-top: 36px!important;

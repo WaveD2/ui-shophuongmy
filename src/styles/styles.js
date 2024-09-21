@@ -15,7 +15,7 @@ export const Container = styled.div`
 `;
 
 export const Section = styled.section`
-  padding: 40px 0;
+  padding: 10px 0;
 
   @media (max-width: ${breakpoints.lg}) {
     padding: 32px 0;

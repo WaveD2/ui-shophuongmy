@@ -136,7 +136,7 @@ const Header = () => {
     const params = new URLSearchParams(location.search);
     const searchValue = params.get('search') || "";
     setSearchQuery(searchValue); // Gán giá trị mặc định cho searchQuery
-  }, []); //
+  }, [location.pathname]); //
 
   const handleBlur = () => {
     timeoutIdRef.current = setTimeout(() => {

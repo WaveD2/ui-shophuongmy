@@ -10,12 +10,15 @@ import {
 import { staticImages } from "../../utils/images";
 
 const ProductFilter = ({ productsType }) => {
+  const [filters, setFilters] = useState({
+    category: [],
+    priceRange: { min: 0, max: 900000 },
+    sizes: [],
+  });
+
   const [isProductFilterOpen, setProductFilterOpen] = useState(true);
   const [isPriceFilterOpen, setPriceFilterOpen] = useState(true);
-  const [isColorFilterOpen, setColorFilterOpen] = useState(true);
   const [isSizeFilterOpen, setSizeFilterOpen] = useState(true);
-  const [isStyleFilterOpen, setStyleFilterOpen] = useState(true);
-
 
   const [productFilterList, setProductFilterList] = useState([{
     id: "product-filter-1",
@@ -26,6 +29,50 @@ const ProductFilter = ({ productsType }) => {
     setProductFilterList(productsType);
   }, [productsType]);
 
+  // Hàm cập nhật filter khi người dùng chọn
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: prev[key].includes(value)
+        ? prev[key].filter((item) => item !== value)
+        : [...prev[key], value],
+    }));
+  };
+
+  const handlePriceChange = (min, max) => {
+    setFilters((prev) => ({
+      ...prev,
+      priceRange: { min, max },
+    }));
+  };
+
+  // Hàm gọi API khi filter thay đổi
+  const applyFilters = async () => {
+    const query = new URLSearchParams();
+    console.log("filters", filters);
+
+    if (filters.priceRange.min || filters.priceRange.max) {
+      query.append("price[$lt]", filters.priceRange.max);
+      query.append("price[$gt]", filters.priceRange.min);
+    }
+    if (filters.sizes.length) {
+      query.append("variants.size", JSON.stringify(filters.sizes));
+    }
+
+    if (filters.category.length) {
+      query.append("category.slug", JSON.stringify(filters.category));
+    }
+
+    // const response = await fetch(`{{api_shop_huongmy}}/products?${query.toString()}`);
+    // const data = await response.json();
+    // console.log(data); // Cập nhật danh sách sản phẩm với dữ liệu mới
+  };
+
+  // Mỗi khi filters thay đổi, tự động gọi API
+  useEffect(() => {
+    applyFilters();
+  }, [filters]);
+
   const toggleFilter = (filter) => {
     switch (filter) {
       case "product":
@@ -34,43 +81,12 @@ const ProductFilter = ({ productsType }) => {
       case "price":
         setPriceFilterOpen(!isPriceFilterOpen);
         break;
-      case "color":
-        setColorFilterOpen(!isColorFilterOpen);
-        break;
       case "size":
         setSizeFilterOpen(!isSizeFilterOpen);
-        break;
-      case "style":
-        setStyleFilterOpen(!isStyleFilterOpen);
         break;
       default:
         break;
     }
-  };
-
-  const rangeMin = 100;
-  const [minRange, setMinRange] = useState(300);
-  const [maxRange, setMaxRange] = useState(700);
-
-  const handleInputChange = (e) => {
-    const inputName = e.target.name;
-    const inputValue = parseInt(e.target.value);
-
-    if (inputName === "min") {
-      setMinRange(inputValue);
-      if (maxRange - inputValue < rangeMin) {
-        setMaxRange(inputValue + rangeMin);
-      }
-    } else if (inputName === "max") {
-      setMaxRange(inputValue);
-      if (inputValue - minRange < rangeMin) {
-        setMinRange(inputValue - rangeMin);
-      }
-    }
-  };
-
-  const calculateRangePosition = (value, max) => {
-    return (value / max) * 100 + "%";
   };
 
   return (
@@ -80,30 +96,27 @@ const ProductFilter = ({ productsType }) => {
           className="filter-title flex items-center justify-between"
           onClick={() => toggleFilter("product")}
         >
-          <p className="filter-title-text text-gray text-base font-semibold text-lg">
-            Loại
-          </p>
-          <span
-            className={`text-gray text-xxl filter-title-icon ${!isProductFilterOpen ? "rotate" : ""
-              }`}
-          >
+          <p className="filter-title-text text-gray text-base font-semibold text-lg">Loại</p>
+          <span className={`text-gray text-xxl filter-title-icon ${!isProductFilterOpen ? "rotate" : ""}`}>
             <i className="bi bi-filter"></i>
           </span>
         </FilterTitle>
         <FilterWrap className={`${!isProductFilterOpen ? "hide" : "show"}`}>
-          {productFilterList?.map((productFilter, index) => {
-            return (
-              <div className="product-filter-item" key={index}>
-                <div className="filter-item-head w-full flex items-center justify-between cursor-pointer"
-                >
-                  <label htmlFor={productFilter.id} className="filter-head-title text-base text-gray font-semibold">
-                    {productFilter.name}
-                  </label>
-                  <input type="checkbox" id={productFilter.id} name={productFilter.id} />
-                </div>
+          {productFilterList?.map((productFilter, index) => (
+            <div className="product-filter-item" key={index}>
+              <div className="filter-item-head w-full flex items-center justify-between cursor-pointer">
+                <label htmlFor={productFilter.id} className="filter-head-title text-base text-gray font-semibold">
+                  {productFilter.name}
+                </label>
+                <input
+                  type="checkbox"
+                  id={productFilter.id}
+                  name={productFilter.id}
+                  onChange={() => handleFilterChange("category", productFilter.name)}
+                />
               </div>
-            );
-          })}
+            </div>
+          ))}
         </FilterWrap>
       </ProductCategoryFilter>
 
@@ -112,39 +125,34 @@ const ProductFilter = ({ productsType }) => {
           className="filter-title flex items-center justify-between"
           onClick={() => toggleFilter("price")}
         >
-          <p className="filter-title-text text-gray text-base font-semibold text-lg">
-            Mức giá
-          </p>
-          <span
-            className={`text-gray text-xl filter-title-icon ${!isPriceFilterOpen ? "rotate" : ""
-              }`}
-          >
+          <p className="filter-title-text text-gray text-base font-semibold text-lg">Mức giá</p>
+          <span className={`text-gray text-xl filter-title-icon ${!isPriceFilterOpen ? "rotate" : ""}`}>
             <i className="bi bi-chevron-up"></i>
           </span>
         </FilterTitle>
-        <FilterWrap
-          className={`range filter-wrap ${!isPriceFilterOpen ? "hide" : "show"
-            }`}>
+        <FilterWrap className={`range filter-wrap ${!isPriceFilterOpen ? "hide" : "show"}`}>
           {
             [{
-              id: "price_1",
               name: "Giá dưới 100,000₫",
-              // price: { price["$gt"] : "100000" }
+              min: 0,
+              max: 100000
             },
             {
-              id: "price_2",
               name: "100,000₫ - 200,000₫",
-              // price: { price["$gt"] : "100000" }
+              min: 100000,
+              max: 200000
             }
             ]?.map((productFilter, index) => {
               return (
                 <div className="product-filter-item" key={index}>
                   <div className="filter-item-head w-full flex items-center justify-between cursor-pointer"
                   >
-                    <label htmlFor={productFilter.id} className="filter-head-title text-base text-gray font-semibold">
+                    <label htmlFor={index} className="filter-head-title text-base text-gray font-semibold">
                       {productFilter.name}
                     </label>
-                    <input type="checkbox" id={productFilter.id} name={productFilter.id} />
+                    <input type="checkbox" id={index} name={index}
+                      onChange={() => handlePriceChange(productFilter.min, productFilter.max)}
+                    />
                   </div>
                 </div>
               );
@@ -152,144 +160,21 @@ const ProductFilter = ({ productsType }) => {
         </FilterWrap>
       </PriceFilter>
 
-      <ColorsFilter>
-        <FilterTitle
-          className="flex items-center justify-between"
-          onClick={() => toggleFilter("color")}
-        >
-          <p className="filter-title-text text-gray text-base font-semibold text-lg">
-            Màu sắc
-          </p>
-          <span
-            className={`text-gray text-xl filter-title-icon ${!isColorFilterOpen ? "rotate" : ""
-              }`}
-          >
-            <i className="bi bi-chevron-up"></i>
-          </span>
-        </FilterTitle>
-
-        {/* Filter colors */}
-
-        <FilterWrap className={`${!isColorFilterOpen ? "hide" : "show"}`}>
-          <div className="colors-list grid">
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color1} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color2} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color3} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color4} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color5} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color6} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color7} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color8} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color9} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color10} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color11} alt="" />
-            </div>
-            <div className="colors-item text-center flex flex-col justify-center items-center">
-              <input type="checkbox" />
-              <img src={staticImages.color12} alt="" />
-            </div>
-          </div>
-        </FilterWrap>
-
-
-      </ColorsFilter>
       <SizesFilter>
-        <FilterTitle
-          className="flex items-center justify-between"
-          onClick={() => toggleFilter("size")}
-        >
-          <p className="filter-title-text text-gray text-base font-semibold text-lg">
-            Size
-          </p>
-          <span
-            className={`text-gray text-xl filter-title-icon ${!isSizeFilterOpen ? "rotate" : ""
-              }`}
-          >
+        <FilterTitle className="flex items-center justify-between" onClick={() => toggleFilter("size")}>
+          <p className="filter-title-text text-gray text-base font-semibold text-lg">Size</p>
+          <span className={`text-gray text-xl filter-title-icon ${!isSizeFilterOpen ? "rotate" : ""}`}>
             <i className="bi bi-chevron-up"></i>
           </span>
         </FilterTitle>
         <FilterWrap className={`${!isSizeFilterOpen ? "hide" : "show"}`}>
           <div className="sizes-list grid text-center justify-center">
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                xxs
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                xs
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                s
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                m
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                l
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                xxl
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                3xl
-              </span>
-            </div>
-            <div className="sizes-item text-sm font-semibold text-outerspace w-full">
-              <input type="checkbox" />
-              <span className="flex items-center justify-center uppercase">
-                4xl
-              </span>
-            </div>
+            {["xxs", "xs", "s", "m", "l", "xxl", "3xl", "4xl"].map((size, index) => (
+              <div className="sizes-item text-sm font-semibold text-outerspace w-full" key={index}>
+                <input type="checkbox" onChange={() => handleFilterChange("sizes", size)} />
+                <span className="flex items-center justify-center uppercase">{size}</span>
+              </div>
+            ))}
           </div>
         </FilterWrap>
       </SizesFilter>

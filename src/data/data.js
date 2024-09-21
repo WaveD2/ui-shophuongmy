@@ -11,16 +11,16 @@ const navMenuData = [
     menuLink: "/product/thoi-trang-be-trai",
     menuText: "Bé trai",
   },
-  {
-    id: "nav-menu-3",
-    menuLink: "/product/phu-kien-be-gai",
-    menuText: "Phụ kiện",
-  },
-  {
-    id: "nav-menu-4",
-    menuLink: "/product/sale-he-ruc-ro",
-    menuText: "Combos",
-  },
+  // {
+  //   id: "nav-menu-3",
+  //   menuLink: "/product/phu-kien-be-gai",
+  //   menuText: "Phụ kiện",
+  // },
+  // {
+  //   id: "nav-menu-4",
+  //   menuLink: "/product/sale-he-ruc-ro",
+  //   menuText: "Combos",
+  // },
 
 ];
 

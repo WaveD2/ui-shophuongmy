@@ -4,7 +4,7 @@ import Breadcrumb from "../../components/common/Breadcrumb";
 import ProductPreview from "../../components/product/ProductPreview";
 import { Link, useParams } from "react-router-dom";
 import { BaseButtonGreen, BaseLinkGreen } from "../../styles/button";
-import { formatPriceVND } from "../../utils/helper";
+import { calculateDiscountedPrice, formatPriceVND } from "../../utils/helper";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductDescriptionTab from "../../components/product/ProductDescriptionTab";
 import ProductSimilar from "../../components/product/ProductSimilar";
@@ -290,7 +290,7 @@ const ProductDetailsScreen = () => {
             <h2 className="prod-title">{product?.name}</h2>
             <ProductSizeWrapper>
               <p className="prod-price text-3xl font-bold text-outerspace">
-                {product?.price && formatPriceVND(product?.price, product?.discount)}
+                {calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}
                 {
                   !!(product?.discount) &&
                   <span className="text-gray text-xl" style={{ textDecoration: "line-through", display: "inline-block", marginLeft: "8px" }}>{formatPriceVND(product?.price)}</span>

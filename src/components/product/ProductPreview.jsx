@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { PropTypes } from "prop-types";
 import { useEffect, useState } from "react";
 import { breakpoints, defaultTheme } from "../../styles/themes/default";
+import ImageLoader from "../common/ImageLoading";
 
 const ProductPreviewWrapper = styled.div`
   grid-template-columns: 72px auto;
@@ -77,8 +78,6 @@ const ProductPreviewWrapper = styled.div`
   width: 100%; 
   height: auto; 
   object-fit: cover; 
-  transition: opacity 0.2s ease;
-  opacity: 0; 
   position: absolute; 
   top: 50%; /* Align center vertically */
   left: 50%; /* Align center horizontally */
@@ -106,9 +105,7 @@ const ProductPreviewWrapper = styled.div`
 `;
 
 const ProductPreview = ({ previewImages }) => {
-  const [activePreviewImage, setActivePreviewImage] = useState(
-    previewImages[0]
-  );
+  const [activePreviewImage, setActivePreviewImage] = useState(previewImages[0]);
 
   const handlePreviewImageChange = (previewImage) => {
     setActivePreviewImage(previewImage);
@@ -128,26 +125,21 @@ const ProductPreview = ({ previewImages }) => {
               key={index}
               onClick={() => handlePreviewImageChange(previewImage)}
             >
-              <div className="preview-item">
-                <img
-                  src={previewImage}
-                  alt=""
-                  className="object-fit-cover"
-                />
-              </div>
+              <ImageLoader
+                src={previewImage}
+                height={"100%"}
+                alt="anh san pham"
+                classStyle={"preview-item"}
+              />
             </div>
-          );
+          )
         })}
       </div>
-      <div className="preview-display">
-        <img
-          src={activePreviewImage}
-          className="object-fit-cover"
-          alt="Preview"
-          loading="lazy" /* Lazy loading */
-          onLoad={(e) => e.currentTarget.style.opacity = 1}
-        />
-      </div>
+      <ImageLoader
+        classStyle={"preview-display"}
+        src={activePreviewImage}
+        alt="anh san pham"
+      />
 
     </ProductPreviewWrapper>
   );

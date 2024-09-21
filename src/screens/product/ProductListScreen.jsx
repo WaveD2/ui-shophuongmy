@@ -177,7 +177,6 @@ const ProductListScreen = () => {
           </ProductsContentLeft>
           <ProductsContentRight>
             <div className="products-right-top flex items-center" style={{ "justify-content": "right" }} >
-              {/* type product */}
               <SelectOption label="Sắp xếp:" options={options} onChange={handleOptionChange} styleWrapper={{ "justify-content": "right" }} />
             </div>
             <ProductList products={products} />

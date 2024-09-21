@@ -225,3 +225,5 @@ export const staticImages = {
   paypass,
   confirmed_img,
 };
+
+
