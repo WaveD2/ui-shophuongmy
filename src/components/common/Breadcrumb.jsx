@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { defaultTheme } from "../../styles/themes/default";
 
 const BreadcrumbWrapper = styled.nav`
-  margin-bottom: 24px;
+  padding-bottom: 14px;
 
   .breadcrumb-separator {
     margin-left: 8px;

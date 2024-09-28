@@ -7,9 +7,11 @@ import { calculateDiscountedPrice, formatPriceVND } from "../../utils/helper";
 import { tokenUtils } from "../../utils/token";
 import showToast from "../../utils/toast";
 import useDebounce from "../../utils/debounce";
+import ProductOptions from "./ProductionOption";
+import FashionImageLoader from "../common/ImageLoading";
 
 const ProductCardWrapper = styled(Link)`
-position: relative;
+  position: relative;
 
   .discount-badge {
     position: absolute;
@@ -76,7 +78,8 @@ const ProductItem = ({ product }) => {
         <div className="discount-badge">-{product?.discount}%</div>
       }
       <div className="product-img">
-        <img className="object-fit-cover" src={product?.images?.[0]} />
+        {/* <img className="object-fit-cover" src={product?.productItems?.[0].image} /> */}
+        <FashionImageLoader src={product?.productItems?.[0].image} />
         <button
           type="button"
           className="product-wishlist-icon flex items-center justify-center bg-white"
@@ -88,11 +91,22 @@ const ProductItem = ({ product }) => {
           <i className="bi bi-heart"></i>
         </button>
       </div>
+      <div className="product-option">
+        <ProductOptions
+          options={product?.productItems.map(variant => [
+            { type: 'image', value: variant.image, text: variant.color }
+          ]).flat()}
+          onSelect={(e) => {
+            e.preventDefault()
+            console.log("er :;", e);
+          }} />
+      </div>
       <div className="product-info">
         <p className="font-bold">{product?.name}</p>
         <div className="flex items-center justify-between text-sm font-medium">
-          <span className="text-gray" style={{ textDecoration: "line-through" }}>{formatPriceVND(product?.price)}</span>
-          <span className="text-outerspace font-bold">{calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}</span>
+          <span className="text-outerspace text-black font-bold">{calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}</span>
+          <span className="text-gray" style={{ textDecoration: "line-through" }}>{
+            product?.discount ? formatPriceVND(product?.price) : ""}</span>
         </div>
       </div>
     </ProductCardWrapper>

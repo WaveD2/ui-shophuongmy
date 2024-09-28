@@ -6,10 +6,10 @@ import ImageLoader from "../common/ImageLoading";
 
 const ProductPreviewWrapper = styled.div`
   grid-template-columns: 72px auto;
-  gap: 24px;
+  gap: 20px;
 
   @media (max-width: ${breakpoints.xl}) {
-    gap: 16px;
+    gap: 14px;
   }
 
   @media (max-width: ${breakpoints.sm}) {
@@ -65,13 +65,14 @@ const ProductPreviewWrapper = styled.div`
 
  .preview-display {
   width: 100%; 
-  height: 600px; 
+  height: 100%; 
   overflow: hidden;  
   display: flex; 
   align-items: center; 
   justify-content: center;
   background-color: #f0f0f0; 
   position: relative; 
+  border-radius: 8px;
 }
 
 .preview-display img {
@@ -105,28 +106,29 @@ const ProductPreviewWrapper = styled.div`
 `;
 
 const ProductPreview = ({ previewImages }) => {
-  const [activePreviewImage, setActivePreviewImage] = useState(previewImages[0]);
+  const [activePreviewImage, setActivePreviewImage] = useState();
 
   const handlePreviewImageChange = (previewImage) => {
     setActivePreviewImage(previewImage);
   };
 
   useEffect(() => {
-    setActivePreviewImage(previewImages[0]);
+    setActivePreviewImage(previewImages[0].image);
   }, [previewImages]);
+  console.log("activePreviewImage::", activePreviewImage);
 
   return (
     <ProductPreviewWrapper className="grid items-center">
       <div className="preview-items w-full">
-        {previewImages.map((previewImage, index) => {
+        {Array.isArray(previewImages) && previewImages?.map((previewImage, index) => {
           return (
             <div
               className="preview-item-wrapper"
               key={index}
-              onClick={() => handlePreviewImageChange(previewImage)}
+              onClick={() => handlePreviewImageChange(previewImage.image)}
             >
               <ImageLoader
-                src={previewImage}
+                src={previewImage.image}
                 height={"100%"}
                 alt="anh san pham"
                 classStyle={"preview-item"}

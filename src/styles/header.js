@@ -4,8 +4,12 @@ import { breakpoints } from "./themes/default";
 
 // common header stylings for both auth & main pages
 export const HeaderMainWrapper = styled.header`
-  min-height: 72px;
-  box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px,
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    background: white;
+    min-height: 72px;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px,
     rgba(17, 17, 26, 0.05) 0px 8px 24px, rgba(17, 17, 26, 0.05) 0px 16px 56px;
 
   .header-wrap {

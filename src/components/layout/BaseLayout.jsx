@@ -11,6 +11,7 @@ const BaseLayout = () => {
       <Sidebar />
       <div
         style={{
+          marginTop: "72px",
           minHeight: "calc(100vh - 462px)",
         }}
       >

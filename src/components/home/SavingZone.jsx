@@ -6,13 +6,14 @@ import { breakpoints } from "../../styles/themes/default";
 import { useEffect, useState } from "react";
 import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const ProductGridWrapper = styled.div`
   grid-template-columns: repeat(1, 1fr);
   gap: 20px;
 `;
 
-const ProductCardOverlayWrapper = styled.div`
+const ProductCardOverlayWrapper = styled.a`
   position: relative;
   height: 420px;
   border-radius: 12px;
@@ -22,31 +23,6 @@ const ProductCardOverlayWrapper = styled.div`
     height: 360px;
   }
 
-
-  .product-info{
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1;
-    padding: 32px 24px;
-    width: 230px;
-    text-wrap: nowrap;
-
-    .info-badge{
-        min-width: 100px;
-        height: 34px;
-    }
-    .info-title{
-        font-size: 28px;
-        margin: 14px 0;
-    }
-    .discount-text{
-        margin-top: 4px;
-    }
-    .info-arrow{
-        margin: 16px 0 16px auto;
-        width: 110px;
-    }
 
     @media(max-width: ${breakpoints.xl}){
         padding: 16px;
@@ -83,31 +59,21 @@ const SavingZone = ({ slug, banner }) => {
   return (
     <Section>
       <Container>
-        <Title titleText={banners.title} />
+        <Title className="uppercase" titleText={banners.title} />
         <ProductGridWrapper className="grid">
           {Object.keys(banners).length &&
             (
               <ProductCardOverlayWrapper
                 className="product-card-overlay text-white"
                 key={banners.id}
+                to={`/product/${banners?.slug}`}
               >
-                <img
-                  src={banners?.bannerImg || bannerImg}
-                  className="object-fit-cover"
-                  alt=""
-                />
                 <div className="product-info text-end w-full h-full">
-                  {/* <h4 className="info-title font-semibold">
-                    {banners?.title}
-                  </h4> */}
-
-                  <BaseLinkOutlineWhite
-                    as={BaseLinkOutlineWhite}
-                    to={`/product/${banners?.slug}`}
-                    className="uppercase"
-                  >
-                    Xem ngay
-                  </BaseLinkOutlineWhite>
+                  <img
+                    src={banners?.image || image}
+                    className="object-fit-cover"
+                    alt=""
+                  />
                 </div>
               </ProductCardOverlayWrapper>
             )

@@ -13,6 +13,7 @@ import {
 
 const SideNavigationWrapper = styled.div`
   position: fixed;
+  margin-top: 72px;
   top: 0;
   left: 0;
   width: 280px;

@@ -71,6 +71,9 @@ const NavigationMenuWrapper = styled.nav`
   }
 
   .nav-menu-link {
+    font-size : 16px;
+    position: relative;
+    
     &.active {
       color: ${defaultTheme.color_outerspace};
       font-weight: 700;
@@ -78,6 +81,18 @@ const NavigationMenuWrapper = styled.nav`
 
     &:hover {
       color: ${defaultTheme.color_outerspace};
+
+      &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 100%;
+      height:2px;
+      z-index:99;
+      background: ${defaultTheme.color_black_04};
+      transition: all 0.8s ease;
+    }
     }
   }
 
@@ -99,6 +114,7 @@ const IconLinksWrapper = styled.div`
     width: 36px;
     height: 36px;
     border-radius: 6px;
+    font-size :16px;
 
     &.active {
       background-color: ${defaultTheme.color_sea_green};

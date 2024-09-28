@@ -176,8 +176,8 @@ const ProductListScreen = () => {
             <ProductFilter productsType={optionNames} />
           </ProductsContentLeft>
           <ProductsContentRight>
-            <div className="products-right-top flex items-center" style={{ "justify-content": "right" }} >
-              <SelectOption label="Sắp xếp:" options={options} onChange={handleOptionChange} styleWrapper={{ "justify-content": "right" }} />
+            <div className="products-right-top flex items-center" style={{ "justifyContent": "right" }} >
+              <SelectOption label="Sắp xếp:" options={options} onChange={handleOptionChange} styleWrapper={{ "justifyContent": "right" }} />
             </div>
             <ProductList products={products} />
           </ProductsContentRight>

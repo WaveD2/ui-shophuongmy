@@ -18,12 +18,12 @@ import Tooltip from "../../components/tooltip/Tooltip";
 import useDebounce from "../../utils/debounce";
 
 const DetailsScreenWrapper = styled.main`
-  margin: 40px 0;
+    padding: 32px 45px;
 `;
 
 const DetailsContent = styled.div`
   grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
+  gap: 30px;
 
   @media (max-width: ${breakpoints.xl}) {
     gap: 24px;
@@ -37,6 +37,7 @@ const DetailsContent = styled.div`
 
 const ProductDetailsWrapper = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
   padding: 24px;
 
   @media (max-width: ${breakpoints.sm}) {
@@ -164,10 +165,12 @@ const ProductColorWrapper = styled.div`
     column-gap: 12px;
   }
 
+`;
+const StyledColorBox = styled.span`
   .prod-colors-item {
     position: relative;
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 32px;
     transition: ${defaultTheme.default_transition};
 
     &:hover {
@@ -178,27 +181,26 @@ const ProductColorWrapper = styled.div`
       position: absolute;
       top: 0;
       left: 0;
-      width: 22px;
-      height: 22px;
+      width: 32px;
+      height: 32px;
       opacity: 0;
       cursor: pointer;
     }
-
+  }
     .prod-colorbox {
       border-radius: 100%;
-      width: 22px;
-      height: 22px;
+      width: 32px;
+      height: 32px;
       display: inline-block;
       transition: ${defaultTheme.default_transition};
+      background-color: ${(props) => props.color || 'transparent'};
     }
 
-    input:checked + label .prod-colorbox{
+    input:checked + label.prod-colorbox{
       outline: 1px solid ${defaultTheme.color_gray};
       outline-offset: 3px;
-    }
-  }
+    } 
 `;
-
 
 
 const QuantityContainer = styled.div`
@@ -216,9 +218,9 @@ const CartContainer = styled.div`
   gap: 12px;
   width: 100%;
   margin-top: 20px;
-@media (max-width: ${breakpoints.sm}) {
-  flex-wrap: wrap;
-  }
+  @media (max-width: ${breakpoints.sm}) {
+    flex-wrap: wrap;
+    }
 
 `;
 
@@ -285,7 +287,10 @@ const ProductDetailsScreen = () => {
       <Container>
         <Breadcrumb items={breadcrumbItems} />
         <DetailsContent className="grid">
-          <ProductPreview previewImages={product?.images} />
+          <ProductPreview previewImages={product?.productItems.map(variant => {
+            return { type: 'image', image: variant.image, text: variant.color }
+          }
+          )} />
           <ProductDetailsWrapper>
             <h2 className="prod-title">{product?.name}</h2>
             <ProductSizeWrapper>
@@ -328,7 +333,8 @@ const ProductDetailsScreen = () => {
               </div>
               <div className="prod-colors-list flex items-center">
                 {product?.variants?.length && product?.variants?.map((product) => (
-                  <div className="prod-colors-item" key={product._id}
+                  <StyledColorBox className="prod-colors-item" key={product._id}
+                    color={product.color}
                     onClick={() => setSelectedProduct({ ...selectedProduct, color: product.color })}>
                     <input
                       type="radio"
@@ -342,12 +348,11 @@ const ProductDetailsScreen = () => {
                         <span
                           className="prod-colorbox"
                           key={product._id}
-                          style={{ background: `${product.color}` }}
                         >
                         </span>
                       </Tooltip>
                     </label>
-                  </div>
+                  </StyledColorBox>
                 ))}
               </div>
             </ProductColorWrapper>
