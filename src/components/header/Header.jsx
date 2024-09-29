@@ -232,7 +232,7 @@ const Header = () => {
                   alt="site logo"
                 />
               </div>
-              <span className="site-brand-text text-outerspace">Hường Mỹ</span>
+              <span className="site-brand-text text-outerspace text-nowrap ">Hường Mỹ</span>
             </SiteBrandWrapper>
           </div>
           <NavigationAndSearchWrapper className="flex items-center">

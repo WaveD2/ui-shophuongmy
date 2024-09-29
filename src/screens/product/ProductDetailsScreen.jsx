@@ -16,22 +16,27 @@ import { useDispatch } from "react-redux";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
 import Tooltip from "../../components/tooltip/Tooltip";
 import useDebounce from "../../utils/debounce";
+import ProductOptions from "../../components/product/ProductionOption";
 
 const DetailsScreenWrapper = styled.main`
     padding: 32px 45px;
+    @media (max-width: ${breakpoints.md}) {
+      padding: 15px 0px;
+    }
 `;
 
 const DetailsContent = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
 
-  @media (max-width: ${breakpoints.xl}) {
+    @media (max-width: ${breakpoints.xl}) {
     gap: 24px;
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: repeat(, 1fr);
   }
 
   @media (max-width: ${breakpoints.lg}) {
     grid-template-columns: 100%;
+    } 
   }
 `;
 
@@ -68,6 +73,10 @@ const ProductDetailsWrapper = styled.div`
     &-text {
       margin-top: 2px;
     }
+
+    @media (max-width: ${breakpoints.sm}) {
+      min-width: 100%;
+    }
   }
 
   .btn-and-price {
@@ -81,13 +90,25 @@ const ProductDetailsWrapper = styled.div`
   }
 `;
 
-const ProductSizeWrapper = styled.div`
+const ProductColorWrapper = styled.div`
   .prod-size-top {
     gap: 20px;
   }
+  .prod-discount {
+    display: inline-block;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 16px;
+    padding: 2px 4px;
+    background: red;
+    width: max-content;
+    text-align: center;
+    border-radius: 30px;
+  }
   .prod-size-list {
     gap: 12px;
-    margin-top: 16px;
+    margin-top: 4px;
     @media (max-width: ${breakpoints.sm}) {
       gap: 8px;
     }
@@ -133,6 +154,7 @@ const ProductSizeWrapper = styled.div`
         background-color: ${defaultTheme.color_outerspace};
         border-color: ${defaultTheme.color_outerspace};
       }
+
     }
 
     span {
@@ -150,16 +172,16 @@ const ProductSizeWrapper = styled.div`
   }
 `;
 
-const ProductColorWrapper = styled.div`
+const ProductSizeWrapper = styled.div`
   margin-top: 32px;
 
   @media (max-width: ${breakpoints.sm}) {
     margin-top: 24px;
   }
 
-  .prod-colors-top {
-    margin-bottom: 16px;
-  }
+  // .prod-colors-top {
+  //   margin-bottom: 16px;
+  // }
 
   .prod-colors-list {
     column-gap: 12px;
@@ -235,6 +257,8 @@ const ProductDetailsScreen = () => {
   const { id } = useParams();
 
   const [product, setProduct] = useState({});
+  const [imgPrevew, setImgPrevew] = useState();
+
   const [selectedProduct, setSelectedProduct] = useState({
     quantity: 1,
     size: "",
@@ -287,75 +311,64 @@ const ProductDetailsScreen = () => {
       <Container>
         <Breadcrumb items={breadcrumbItems} />
         <DetailsContent className="grid">
-          <ProductPreview previewImages={product?.productItems.map(variant => {
-            return { type: 'image', image: variant.image, text: variant.color }
-          }
-          )} />
+          <ProductPreview
+            images={product?.productItems.map(variant => {
+              return { type: 'image', image: variant.image, text: variant.color }
+            })}
+            previewImage={imgPrevew}
+          />
           <ProductDetailsWrapper>
             <h2 className="prod-title">{product?.name}</h2>
-            <ProductSizeWrapper>
-              <p className="prod-price text-3xl font-bold text-outerspace">
-                {calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}
+            <ProductColorWrapper>
+              <div className="prod-price text-3xl font-bold text-outerspace">
+                <span> {calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}</span>
                 {
                   !!(product?.discount) &&
                   <span className="text-gray text-xl" style={{ textDecoration: "line-through", display: "inline-block", marginLeft: "8px" }}>{formatPriceVND(product?.price)}</span>
                 }
-              </p>
+
+                {product?.discount && <span className="prod-discount">
+                  <span>-{product?.discount}%</span >
+                </span>}
+              </div>
               <div className="prod-size flex items-center flex-wrap">
                 <p className="text-lg font-semibold text-outerspace">
-                  Chọn size
+                  Màu sắc
+                  <span className="text-gray text-sm capitalize" >: {"mau do"}</span>
                 </p>
+
                 {/* <Link to="/" className="text-lg text-gray font-medium">
                   bảng size chi tiết &nbsp; <i className="bi bi-arrow-right"></i>
                 </Link> */}
               </div>
               <div className="prod-size-list flex items-center">
-                {product?.variants?.length && product?.variants.map((product) => (
-                  <div className="prod-size-item" key={product._id}
-                    onClick={() => setSelectedProduct({ ...selectedProduct, size: product.size })}>
-                    <input id={`size-${product._id}`} type="radio" name="size" />
-                    <label htmlFor={`size-${product._id}`}>
-                      <Tooltip text={product.size}>
-                        <span className="prod-size-box" key={product._id}>
-                          {product.size}
-                        </span>
-                      </Tooltip>
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </ProductSizeWrapper>
-            <ProductColorWrapper>
-              <div className="prod-colors-top flex items-center flex-wrap">
-                <p className="text-lg font-semibold text-outerspace">
-                  Màu sắc
-                </p>
-              </div>
-              <div className="prod-colors-list flex items-center">
-                {product?.variants?.length && product?.variants?.map((product) => (
-                  <StyledColorBox className="prod-colors-item" key={product._id}
-                    color={product.color}
-                    onClick={() => setSelectedProduct({ ...selectedProduct, color: product.color })}>
-                    <input
-                      type="radio"
-                      id={`color-${product._id}`}
-                      name="colors"
-                      disabled={product.stock === 0}
-                    />
-
-                    <label htmlFor={`color-${product._id}`}>
-                      <Tooltip text={product.color}>
-                        <span
-                          className="prod-colorbox"
-                          key={product._id}
-                        >
-                        </span>
-                      </Tooltip>
-                    </label>
-                  </StyledColorBox>
-                ))}
+                <div className="product-options">
+                  <ProductOptions
+                    options={product?.productItems.map(variant => [
+                      { type: 'image', value: variant.image, text: variant.color }
+                    ]).flat()}
+                    onClick={(e) => {
+                      console.log("Err", e);
+                      setImgPrevew(e)
+                    }} />
+                </div>
               </div>
             </ProductColorWrapper>
+            <ProductSizeWrapper>
+              {/* hien thi size */}
+              <div className="prod-size-list flex items-center">
+                <div className="product-options">
+                  <ProductOptions
+                    options={product?.productItems.map(variant => [
+                      { type: 'texc', value: variant.image, text: variant.color }
+                    ]).flat()}
+                    onClick={(e) => {
+                      console.log("Err", e);
+                      setImgPrevew(e)
+                    }} />
+                </div>
+              </div>
+            </ProductSizeWrapper>
             <CartContainer>
               <QuantityContainer>
                 <BaseButtonGreen onClick={decrementQuantity}>

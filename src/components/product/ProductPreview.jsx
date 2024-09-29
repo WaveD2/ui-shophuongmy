@@ -65,7 +65,8 @@ const ProductPreviewWrapper = styled.div`
 
  .preview-display {
   width: 100%; 
-  height: 100%; 
+  height: 800px; 
+  max-height:900px;
   overflow: hidden;  
   display: flex; 
   align-items: center; 
@@ -78,7 +79,7 @@ const ProductPreviewWrapper = styled.div`
 .preview-display img {
   width: 100%; 
   height: auto; 
-  object-fit: cover; 
+  object-fit: contain; 
   position: absolute; 
   top: 50%; /* Align center vertically */
   left: 50%; /* Align center horizontally */
@@ -105,7 +106,7 @@ const ProductPreviewWrapper = styled.div`
 
 `;
 
-const ProductPreview = ({ previewImages }) => {
+const ProductPreview = ({ images, previewImage }) => {
   const [activePreviewImage, setActivePreviewImage] = useState();
 
   const handlePreviewImageChange = (previewImage) => {
@@ -113,14 +114,19 @@ const ProductPreview = ({ previewImages }) => {
   };
 
   useEffect(() => {
-    setActivePreviewImage(previewImages[0].image);
-  }, [previewImages]);
+    if (!previewImage) {
+      setActivePreviewImage(images[0].image);
+    } else {
+      setActivePreviewImage(previewImage.value)
+    }
+  }, [previewImage]);
+
   console.log("activePreviewImage::", activePreviewImage);
 
   return (
     <ProductPreviewWrapper className="grid items-center">
       <div className="preview-items w-full">
-        {Array.isArray(previewImages) && previewImages?.map((previewImage, index) => {
+        {Array.isArray(images) && images?.map((previewImage, index) => {
           return (
             <div
               className="preview-item-wrapper"
@@ -129,7 +135,6 @@ const ProductPreview = ({ previewImages }) => {
             >
               <ImageLoader
                 src={previewImage.image}
-                height={"100%"}
                 alt="anh san pham"
                 classStyle={"preview-item"}
               />

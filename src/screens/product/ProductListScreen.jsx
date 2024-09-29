@@ -113,7 +113,6 @@ const ProductListScreen = () => {
 
   const handlePageChange = (page) => {
     console.log("page:::", page);
-
     setCurrentPage(page);
   };
 

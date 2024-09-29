@@ -181,6 +181,9 @@ export const GlobalStyles = createGlobalStyle`
     .uppercase {
         text-transform: uppercase;
     }
+     .lowercase {
+        text-transform: lowercase;
+    }
     .capitalize {
         text-transform: capitalize;
     }

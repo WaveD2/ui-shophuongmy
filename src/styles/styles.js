@@ -15,10 +15,10 @@ export const Container = styled.div`
 `;
 
 export const Section = styled.section`
-  padding: 30px 45px;
+  padding: 20px 45px;
 
   @media (max-width: ${breakpoints.lg}) {
-    padding: 32px 0;
+    padding: 14px 0;
   }
 `;
 

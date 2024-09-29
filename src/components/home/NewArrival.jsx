@@ -22,27 +22,43 @@ const ProductCardBoxWrapper = styled.div`
 `;
 
 const ArrivalSliderWrapper = styled.div`
+  max-height:300px;
+  overflow: hidden;
   .custom-prev-arrow {
     top: 43%;
     left: -18px;
-    @media (max-width: ${breakpoints.xxl}) {
-      left: 24px;
+   
+    @media (max-width: ${breakpoints.xxl}) and (max-width: ${breakpoints.lg}) {
+      top: 42%;
+      left : 0
     }
 
-    @media (max-width: ${breakpoints.xs}) {
-      left: 4px;
+    @media (min-width: 360px) and (max-width: 680px) {
+      top: 22%;
+      left : 0
+    }
+    @media (min-width: 410px) {
+      top: 42%;
+      left : 0
     }
   }
 
   .custom-next-arrow {
     top: 43%;
     right: -18px;
-    @media (max-width: ${breakpoints.xxl}) {
-      right: 24px;
-    }
 
-    @media (max-width: ${breakpoints.xs}) {
-      right: 4px;
+    // @media (max-width: ${breakpoints.xxl}) and (max-width: ${breakpoints.lg}) {
+    //   top: 42%;
+    //   right: 0;
+    // }
+
+    @media (min-width: 360px) and (max-width: 680px) {
+      top: 22%;
+      right: 0;
+    }
+    @media (min-width: 410px) {
+      top: 42%;
+      right: 0;
     }
   }
 `;

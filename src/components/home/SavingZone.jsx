@@ -23,10 +23,9 @@ const ProductCardOverlayWrapper = styled.a`
     height: 360px;
   }
 
-
-    @media(max-width: ${breakpoints.xl}){
-        padding: 16px;
-    }
+    // @media(max-width: ${breakpoints.xl}){
+    //     padding: 16px;
+    // }
   }
 `;
 

@@ -9,55 +9,85 @@ import showToast from "../../utils/toast";
 import useDebounce from "../../utils/debounce";
 import ProductOptions from "./ProductionOption";
 import FashionImageLoader from "../common/ImageLoading";
+import { useState } from "react";
 
-const ProductCardWrapper = styled(Link)`
+const ProductCardWrapper = styled.div`
   position: relative;
-
+  width: 100%;
   .discount-badge {
     position: absolute;
-    top: 12px;
-    left: 22px;
-    background-color: #5b9ce2; /* Màu xanh đậm */
+    top: -4%;
+    left: -2%;
+    background-color: #e92828;
     color: #fff;
-    padding: 8px;
+    padding: 10px;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
-    z-index :10;
-  }
+    z-index: 10;
+    border: 2px solid #d5acac;
+    width: 70px;
+    text-align: center;
 
-  ${commonCardStyles}
-  @media(max-width: ${breakpoints.sm}) {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .product-img {
-    height: 393px;
-    position: relative;
-
-    @media (max-width: ${breakpoints.sm}) {
-      height: 320px;
+     @media(max-width: ${breakpoints.sm}) {
+      top: -2%;
+      padding:6px;
+      font-size: 16px;
+      width: 54px;
     }
   }
 
-  .product-wishlist-icon {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 32px;
-    height: 32px;
-    border-radius: 100%;
+  .product-options {
+      padding: 0 10px;
 
-    &:hover {
-      background-color: ${defaultTheme.color_yellow};
-      color: ${defaultTheme.color_white};
-    }
-  }
+      @media(max-width: ${breakpoints.sm}) {
+        padding: 0px;
+      }
+    }    
+
 `;
+
+const ProductCard = styled(Link)`
+  position: relative;
+  width: 100%;
+  display: inline-block;
+    ${commonCardStyles}
+    @media(max-width: ${breakpoints.sm}) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .product-img {
+      height: 393px;
+      // max-width:300px;
+      width:100%;
+      position: relative;
+      margin-bottom: 8px;
+
+      @media (max-width: ${breakpoints.sm}) {
+        height: 320px;
+      }
+    }
+
+    .product-wishlist-icon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 100%;
+      z-index : 10;
+      &:hover {
+        background-color: ${defaultTheme.color_yellow};
+        color: ${defaultTheme.color_white};
+      }
+  }
+`
 
 const ProductItem = ({ product }) => {
   const productId = product._id ? product._id : product.id;
+
+  const [srcImgPreview, setSrcImgPreview] = useState(product?.productItems?.[0].image);
 
   const handleAddToWishList = useDebounce(() => {
     const wishlist = tokenUtils.getInfoLocal('wishlists') || [];
@@ -71,44 +101,48 @@ const ProductItem = ({ product }) => {
     }
   }, 200)
 
+
+
   return (
-    <ProductCardWrapper key={productId} to={`/product/details/${productId}`}>
+    <ProductCardWrapper >
       {
         Boolean(product?.discount) &&
         <div className="discount-badge">-{product?.discount}%</div>
       }
-      <div className="product-img">
-        {/* <img className="object-fit-cover" src={product?.productItems?.[0].image} /> */}
-        <FashionImageLoader src={product?.productItems?.[0].image} />
-        <button
-          type="button"
-          className="product-wishlist-icon flex items-center justify-center bg-white"
-          onClick={(e) => {
-            e.preventDefault();
-            handleAddToWishList();
-          }}
-        >
-          <i className="bi bi-heart"></i>
-        </button>
-      </div>
-      <div className="product-option">
+      <ProductCard key={productId} to={`/product/details/${productId}`}>
+        <div className="product-img">
+          <FashionImageLoader src={srcImgPreview} />
+          <button
+            type="button"
+            className="product-wishlist-icon flex items-center justify-center bg-white"
+            onClick={(e) => {
+              e.preventDefault();
+              handleAddToWishList();
+            }}
+          >
+            <i className="bi bi-heart"></i>
+          </button>
+        </div>
+        <div style={{ marginBottom: "8px" }}>
+          <p className="font-bold">{product?.name}</p>
+          <div className="flex items-center justify-between text-sm font-medium">
+            <span className="text-outerspace text-black font-bold">{calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}</span>
+            <span className="text-gray" style={{ textDecoration: "line-through" }}>{
+              product?.discount ? formatPriceVND(product?.price) : ""}</span>
+          </div>
+        </div>
+      </ProductCard>
+
+      <div className="product-options">
         <ProductOptions
           options={product?.productItems.map(variant => [
             { type: 'image', value: variant.image, text: variant.color }
           ]).flat()}
-          onSelect={(e) => {
-            e.preventDefault()
-            console.log("er :;", e);
+          onClick={(e) => {
+            setSrcImgPreview(e)
           }} />
       </div>
-      <div className="product-info">
-        <p className="font-bold">{product?.name}</p>
-        <div className="flex items-center justify-between text-sm font-medium">
-          <span className="text-outerspace text-black font-bold">{calculateDiscountedPrice({ price: product?.price, discount: product?.discount })}</span>
-          <span className="text-gray" style={{ textDecoration: "line-through" }}>{
-            product?.discount ? formatPriceVND(product?.price) : ""}</span>
-        </div>
-      </div>
+
     </ProductCardWrapper>
   );
 };
