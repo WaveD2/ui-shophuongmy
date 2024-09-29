@@ -17,6 +17,8 @@ import { addOrderProduct } from "../../redux/slices/orderSlice";
 import Tooltip from "../../components/tooltip/Tooltip";
 import useDebounce from "../../utils/debounce";
 import ProductOptions from "../../components/product/ProductionOption";
+import Promotions from "../../components/product/ProductPromotions";
+import Coupon from "../../components/product/ProductDiscount";
 
 const DetailsScreenWrapper = styled.main`
     padding: 32px 45px;
@@ -68,14 +70,17 @@ const ProductDetailsWrapper = styled.div`
     column-gap: 10px;
   }
   .prod-add-btn {
-    min-width: 600px;
-    column-gap: 8px;
+    width: 100%;
+   height: 40px;
+   display: flex;
+   gap: 12px; 
+
     &-text {
       margin-top: 2px;
     }
 
     @media (max-width: ${breakpoints.sm}) {
-      min-width: 100%;
+      max-width: 100%;
     }
   }
 
@@ -179,50 +184,10 @@ const ProductSizeWrapper = styled.div`
     margin-top: 24px;
   }
 
-  // .prod-colors-top {
-  //   margin-bottom: 16px;
-  // }
-
   .prod-colors-list {
     column-gap: 12px;
   }
-
-`;
-const StyledColorBox = styled.span`
-  .prod-colors-item {
-    position: relative;
-    width: 32px;
-    height: 32px;
-    transition: ${defaultTheme.default_transition};
-
-    &:hover {
-      scale: 0.9;
-    }
-
-    input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 32px;
-      height: 32px;
-      opacity: 0;
-      cursor: pointer;
-    }
-  }
-    .prod-colorbox {
-      border-radius: 100%;
-      width: 32px;
-      height: 32px;
-      display: inline-block;
-      transition: ${defaultTheme.default_transition};
-      background-color: ${(props) => props.color || 'transparent'};
-    }
-
-    input:checked + label.prod-colorbox{
-      outline: 1px solid ${defaultTheme.color_gray};
-      outline-offset: 3px;
-    } 
-`;
+ `
 
 
 const QuantityContainer = styled.div`
@@ -304,6 +269,15 @@ const ProductDetailsScreen = () => {
   const handlerAddProductToCart = useDebounce((product) => {
     dispatch(addOrderProduct({ product, ...selectedProduct }))
   }, 300)
+
+  const promotions = [
+    '[Độc quyền Online] Voucher siêu hot 50K - 100K. Áp dụng cho cả hàng Sale và đồng thời CTKM khác',
+    'Sale up to 70% hàng loạt siêu phẩm mùa thu',
+    'Freeship toàn quốc HD từ 499K',
+    '[Độc quyền Online] Ưu đãi sinh nhật bé tháng 9 - Giảm 20% tối đa 100K với HD nguyên giá từ 449K. Inbox Fanpage áp dụng CTKM (Không áp dụng đồng thời CTKM khác)',
+    'Lưu ý: Đối với hàng sale, SP áp dụng CTKM: Đổi size (nếu còn size). Không đổi qua sản phẩm khác.',
+  ];
+
 
   return (
     Object.keys(product).length > 0 &&
@@ -389,7 +363,6 @@ const ProductDetailsScreen = () => {
                   as={BaseLinkGreen}
                   className="prod-add-btn"
                   style={{
-                    width: "100%", height: "40px", display: "flex", gap: "12px",
                     pointerEvents: !selectedProduct?.color || !selectedProduct?.size ? "none" : "auto",
                     opacity: !selectedProduct?.color || !selectedProduct?.size ? 0.8 : 1
                   }}
@@ -402,6 +375,14 @@ const ProductDetailsScreen = () => {
                 </BaseLinkGreen>
               </Tooltip>
             </div>
+
+            <div style={{ marginTop: "20px" }}>
+              <h3>Mã giảm giá:</h3>
+              <Coupon />
+            </div>
+
+            <Promotions promotions={promotions} />
+
             <ProductServices />
           </ProductDetailsWrapper>
         </DetailsContent>

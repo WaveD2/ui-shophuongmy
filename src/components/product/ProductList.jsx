@@ -12,7 +12,7 @@ const ProductListWrapper = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
 
   @media (max-width: ${breakpoints.sm}) {
-    gap: 12px;
+    gap: 30px;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 `;

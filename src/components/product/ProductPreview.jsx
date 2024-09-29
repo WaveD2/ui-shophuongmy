@@ -65,9 +65,7 @@ const ProductPreviewWrapper = styled.div`
 
  .preview-display {
   width: 100%; 
-  height: 800px; 
-  max-height:900px;
-  overflow: hidden;  
+  height: 100%; 
   display: flex; 
   align-items: center; 
   justify-content: center;

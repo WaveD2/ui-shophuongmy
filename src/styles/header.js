@@ -34,6 +34,10 @@ export const SiteBrandWrapper = styled(Link)`
   text-decoration: none;
   column-gap: 10px;
 
+   @media (max-width: ${breakpoints.xl}) {
+      font-size: 20px;
+      // display: none;
+    }
   .brand-img-wrap {
     img {
       width: 28px;

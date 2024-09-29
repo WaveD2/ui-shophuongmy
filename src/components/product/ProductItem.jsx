@@ -139,7 +139,7 @@ const ProductItem = ({ product }) => {
             { type: 'image', value: variant.image, text: variant.color }
           ]).flat()}
           onClick={(e) => {
-            setSrcImgPreview(e)
+            setSrcImgPreview(e.value)
           }} />
       </div>
 

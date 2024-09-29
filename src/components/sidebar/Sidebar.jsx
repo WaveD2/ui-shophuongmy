@@ -10,6 +10,21 @@ import {
   selectIsSidebarOpen,
   toggleSidebar,
 } from "../../redux/slices/sidebarSlice";
+import React, { useEffect, useRef } from 'react';
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: ${(props) => (props.isVisible ? '1' : '0')};
+  visibility: ${(props) => (props.isVisible ? 'visible' : 'hidden')};
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 9;
+`;
+
 
 const SideNavigationWrapper = styled.div`
   position: fixed;
@@ -22,9 +37,11 @@ const SideNavigationWrapper = styled.div`
   padding: 16px;
   transform: translateX(-100%);
   transition: ${defaultTheme.default_transition};
-
+  @media (min-width: 570px) {
+    transform: translateX(-100%); // Đóng sidebar khi màn hình lớn hơn 570px
+  }
   &.show {
-    transform: translateX(0);
+    transform: translateX(0); // Hiện sidebar khi được mở
   }
 
   .sidebar-close-btn {
@@ -39,7 +56,6 @@ const SideNavigationWrapper = styled.div`
   .sidenav-search-form {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    margin-top: 20px;
 
     .input-group {
       min-width: 100%;
@@ -78,7 +94,7 @@ const SideNavigationWrapper = styled.div`
   }
 
   @media (max-width: ${breakpoints.xs}) {
-    width: 100%;
+    width: 70%;
   }
 `;
 
@@ -86,54 +102,75 @@ const Sidebar = () => {
   const location = useLocation();
   const isSidebarOpen = useSelector(selectIsSidebarOpen);
   const dispatch = useDispatch();
+  const sidebarRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        isSidebarOpen
+      ) {
+        dispatch(toggleSidebar());
+      }
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth >= 570 && isSidebarOpen) {
+        dispatch(toggleSidebar());
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isSidebarOpen, dispatch]);
 
   return (
-    <SideNavigationWrapper
-      className={`bg-white h-full ${isSidebarOpen ? "show" : ""}`}
-    >
-      <button
-        className="sidebar-close-btn text-3xl"
-        onClick={() => dispatch(toggleSidebar())}
+    <>
+      <Overlay
+        isVisible={isSidebarOpen}
+      />
+      <SideNavigationWrapper
+        ref={sidebarRef}
+        className={`bg-white h-full ${isSidebarOpen ? 'show' : ''}`}
       >
-        <i className="bi bi-x-square"></i>
-      </button>
-      <div className="sidenav-head">
-        <SiteBrandWrapper to="/" className="inline-flex">
-          <div className="brand-img-wrap flex items-center justify-center">
-            <img className="site-brand-img" src={staticImages.logo} />
-          </div>
-          <span className="site-brand-text text-outerspace">Hường Mỹ</span>
-        </SiteBrandWrapper>
-        <form className="sidenav-search-form">
-          <InputGroupWrapper className="input-group">
-            <span className="input-icon flex items-center justify-center text-xl text-gray">
-              <i className="bi bi-search"></i>
-            </span>
-            <Input
-              type="text"
-              className="input-control w-full"
-              placeholder="Search"
-            />
-          </InputGroupWrapper>
-        </form>
-        <ul className="sidenav-menu-list grid">
-          {sideMenuData?.map((menu) => (
-            <li key={menu.id}>
-              <Link
-                to={menu.menuLink}
-                className={`flex items-center text-gray ${location.pathname === menu.menuLink ? "active" : ""
-                  }`}
-              >
-                <span className="text-xxl">
-                  <i className={`bi bi-${menu.iconName}`}></i>
-                </span>
-                <span className="text-lg font-medium">{menu.menuText}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </SideNavigationWrapper>
+        <div className="sidenav-head">
+          <form className="sidenav-search-form">
+            <InputGroupWrapper className="input-group">
+              <span className="input-icon flex items-center justify-center text-xl text-gray">
+                <i className="bi bi-search"></i>
+              </span>
+              <Input
+                type="text"
+                className="input-control w-full"
+                placeholder="Search"
+              />
+            </InputGroupWrapper>
+          </form>
+          <ul className="sidenav-menu-list grid">
+            {sideMenuData?.map((menu) => (
+              <li key={menu.id}>
+                <Link
+                  to={menu.menuLink}
+                  className={`flex items-center text-gray ${location.pathname === menu.menuLink ? 'active' : ''
+                    }`}
+                >
+                  <span className="text-xxl">
+                    <i className={`bi bi-${menu.iconName}`}></i>
+                  </span>
+                  <span className="text-lg font-medium">{menu.menuText}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </SideNavigationWrapper>
+    </>
   );
 };
 
