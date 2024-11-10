@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Section } from "../../styles/styles";
 import Title from "../common/Title";
 import ProductList from "./ProductList";
-import { apiClient } from "../../api/apiService";
+// import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 
 const ProductSimilar = ({ slug = "", name = "" }) => {
@@ -11,17 +11,17 @@ const ProductSimilar = ({ slug = "", name = "" }) => {
 
 
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}?filter[slug]=${slug}&filter[name][$ne]=${name}`);
-        if (!data?.data?.items) setProducts({});
+    // async function fetchProduct() {
+    //   try {
+    //     const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}?filter[slug]=${slug}&filter[name][$ne]=${name}`);
+    //     if (!data?.data?.items) setProducts({});
 
-        setProducts(data?.data?.items);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    }
-    fetchProduct();
+    //     setProducts(data?.data?.items);
+    //   } catch (error) {
+    //     console.error('Error fetching categories:', error);
+    //   }
+    // }
+    // fetchProduct();
   }, []);
 
 

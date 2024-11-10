@@ -4,7 +4,7 @@ import ProductItem from "./ProductItem";
 import { PropTypes } from "prop-types";
 import { breakpoints } from "../../styles/themes/default";
 import { useEffect, useState } from "react";
-import productService from "../../services/productService";
+// import productService from "../../services/productService";
 
 const ProductListWrapper = styled.div`
   column-gap: 20px;
@@ -17,7 +17,8 @@ const ProductListWrapper = styled.div`
   }
 `;
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products = [] }) => {
+
   return (
     <ProductListWrapper className="grid">
       {products?.map((product) => {

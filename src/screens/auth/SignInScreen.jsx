@@ -13,7 +13,7 @@ import { validateLogin, validateData } from "../../validate/validater";
 import { setUser } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { apiClient } from "../../api/apiService";
+// import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import { debounce } from 'lodash';
 import { tokenUtils } from "../../utils/token";
@@ -62,14 +62,14 @@ const SignInScreen = () => {
 
   async function fetchUser() {
     try {
-      const response = await apiClient.post(`${ENDPOINTS.AUTH}/login`, infoUser);
-      if (!response) return;
+      // const response = await apiClient.post(`${ENDPOINTS.AUTH}/login`, infoUser);
+      // if (!response) return;
 
-      dispatch(setUser(response.user))
-      tokenUtils.setToken(response.tokens);
-      tokenUtils.setInfoLocal('user_info', response.user);
+      // dispatch(setUser(response.user))
+      // tokenUtils.setToken(response.tokens);
+      // tokenUtils.setInfoLocal('user_info', response.user);
 
-      return navigate('/');
+      // return navigate('/');
     } catch (error) {
       console.error('Error fetching categories:', error);
     }

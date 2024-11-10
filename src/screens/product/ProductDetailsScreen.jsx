@@ -10,7 +10,7 @@ import ProductDescriptionTab from "../../components/product/ProductDescriptionTa
 import ProductSimilar from "../../components/product/ProductSimilar";
 import ProductServices from "../../components/product/ProductServices";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../api/apiService";
+// import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import { useDispatch } from "react-redux";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
@@ -232,16 +232,16 @@ const ProductDetailsScreen = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    async function fetchProduct() {
-      try {
-        const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/${id}`);
-        if (!data?.record?.length) setProduct({});
+    // async function fetchProduct() {
+    //   try {
+    //     const data = await apiClient.get(`${ENDPOINTS.PRODUCTS}/${id}`);
+    //     if (!data?.record?.length) setProduct({});
 
-        setProduct(data?.record);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    }
+    //     setProduct(data?.record);
+    //   } catch (error) {
+    //     console.error('Error fetching categories:', error);
+    //   }
+    // }
     fetchProduct();
   }, [id]);
 

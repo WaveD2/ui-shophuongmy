@@ -15,7 +15,7 @@ import { useState } from "react";
 import { validateSignUp, validateData } from "../../validate/validater";
 import { tokenUtils } from "../../utils/token";
 import { useDispatch } from "react-redux";
-import { apiClient } from "../../api/apiService";
+// import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import showToast from "../../utils/toast";
 
@@ -50,15 +50,15 @@ const SignUpScreen = () => {
 
   async function fetchUser() {
     try {
-      const data = { record: infoUser };
-      const response = await apiClient.post(`${ENDPOINTS.AUTH}/register`, data);
+      // const data = { record: infoUser };
+      // // const response = await apiClient.post(`${ENDPOINTS.AUTH}/register`, data);
 
-      if (!response || !response?.data) {
-        return setValidationErrors(response);
-      }
-      showToast({ message: "Đăng ký tài khoản thành công!", type: 'success' });
+      // if (!response || !response?.data) {
+      //   return setValidationErrors(response);
+      // }
+      // showToast({ message: "Đăng ký tài khoản thành công!", type: 'success' });
 
-      return navigate('/sign_in');
+      // return navigate('/sign_in');
     } catch (error) {
       console.error('Error fetching categories:', error);
     }

@@ -84,8 +84,10 @@ const ProductCard = styled(Link)`
   }
 `
 
-const ProductItem = ({ product }) => {
-  const productId = product._id ? product._id : product.id;
+const ProductItem = ({ product = {} }) => {
+
+  console.log("product:::", product);
+
 
   const [srcImgPreview, setSrcImgPreview] = useState(product?.productItems?.[0].image);
 
@@ -109,7 +111,7 @@ const ProductItem = ({ product }) => {
         Boolean(product?.discount) &&
         <div className="discount-badge">-{product?.discount}%</div>
       }
-      <ProductCard key={productId} to={`/product/details/${productId}`}>
+      <ProductCard key={product.id} to={`/product/details/${product.id}`}>
         <div className="product-img">
           <FashionImageLoader src={srcImgPreview} />
           <button
@@ -120,7 +122,7 @@ const ProductItem = ({ product }) => {
               handleAddToWishList();
             }}
           >
-            <i className="bi bi-heart"></i>
+            <i className="bi bi-heart"></i>/
           </button>
         </div>
         <div style={{ marginBottom: "8px" }}>
@@ -135,8 +137,8 @@ const ProductItem = ({ product }) => {
 
       <div className="product-options">
         <ProductOptions
-          options={product?.productItems.map(variant => [
-            { type: 'image', value: variant.image, text: variant.color }
+          options={product?.productVariants.map(variant => [
+            { type: 'image', value: variant.colors.image, text: variant.colors.name }
           ]).flat()}
           onClick={(e) => {
             setSrcImgPreview(e.value)

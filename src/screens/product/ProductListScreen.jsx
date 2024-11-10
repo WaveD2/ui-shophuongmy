@@ -9,7 +9,7 @@ import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductFilter from "../../components/product/ProductFilter";
 import { useEffect, useState } from "react";
 import ENDPOINTS from "../../api/endpoins";
-import { apiClient } from "../../api/apiService";
+// import { apiClient } from "../../api/apiService";
 import SavingZone from "../../components/home/SavingZone";
 import Pagination from "../../components/common/Pagination";
 import SelectOption from "../../components/common/SelectOption";
@@ -145,24 +145,24 @@ const ProductListScreen = () => {
   }, [pathname && state])
 
   useEffect(() => {
-    async function fetchCategory() {
-      try {
-        const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/?slug=${slug}`);
+    // async function fetchCategory() {
+    //   try {
+    //     const data = await apiClient.get(`${ENDPOINTS.CATEGORY}/?slug=${slug}`);
 
-        if (!data?.record && !data?.record?.items.length) {
-          setProducts([]);
-          setOptionNames([]);
-        }
+    //     if (!data?.record && !data?.record?.items.length) {
+    //       setProducts([]);
+    //       setOptionNames([]);
+    //     }
 
-        setProducts(data?.record?.items[0].products.slice(0, 20) || []);
-        setBaner(data?.record?.items[0].banner || {})
-        setOptionNames(data?.record?.items[0].subCategoryType || [])
+    //     setProducts(data?.record?.items[0].products.slice(0, 20) || []);
+    //     setBaner(data?.record?.items[0].banner || {})
+    //     setOptionNames(data?.record?.items[0].subCategoryType || [])
 
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    }
-    fetchCategory();
+    //   } catch (error) {
+    //     console.error('Error fetching categories:', error);
+    //   }
+    // }
+    // fetchCategory();
   }, [slug]);
 
   return (

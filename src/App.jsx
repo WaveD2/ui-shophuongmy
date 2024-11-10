@@ -7,6 +7,11 @@ import routes from "./validate/router";
 import { useEffect, useState } from "react";
 import LoadingComponent from "./components/common/Loading";
 import { tokenUtils } from "./utils/token";
+import {
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import queryClient from "./query/queryCache";
 
 
 // function AuthWrapper({ children }) {
@@ -61,23 +66,27 @@ import { tokenUtils } from "./utils/token";
 
 
 function App() {
+
   return (
     <>
-      <Router>
-        <GlobalStyles />
-        <Routes>
-          <Route path="/" element={<BaseLayout />}>
-            {routes.map(({ path, element: Element, children }, index) => (
-              children ? (
-                <Route key={index} path={path} element={<Element element={children} />} />
-              ) : (
-                <Route key={index} path={path} element={<Element />} />
-              )
-            ))}
-          </Route>
-        </Routes>
-        {/* </AuthWrapper> */}
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <Router>
+          <GlobalStyles />
+          <Routes>
+            <Route path="/" element={<BaseLayout />}>
+              {routes.map(({ path, element: Element, children }, index) => (
+                children ? (
+                  <Route key={index} path={path} element={<Element element={children} />} />
+                ) : (
+                  <Route key={index} path={path} element={<Element />} />
+                )
+              ))}
+            </Route>
+          </Routes>
+          {/* </AuthWrapper> */}
+        </Router>
+      </QueryClientProvider>
     </>
   );
 }

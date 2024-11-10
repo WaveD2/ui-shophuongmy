@@ -10,7 +10,6 @@ import { useDispatch } from "react-redux";
 import { toggleSidebar } from "../../redux/slices/sidebarSlice";
 import SearchComponent from "../common/Search";
 import { useEffect, useRef, useState } from "react";
-import { apiClient } from "../../api/axios";
 import ENDPOINTS from "../../api/endpoins";
 import useDebounce, { useDebounceKeySearch } from "../../utils/debounce";
 
@@ -146,13 +145,13 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
 
-  const timeoutIdRef = useRef(null);
+  // const timeoutIdRef = useRef(null);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const searchValue = params.get('search') || "";
-    setSearchQuery(searchValue); // Gán giá trị mặc định cho searchQuery
-  }, [location.pathname]); //
+  // useEffect(() => {
+  //   const params = new URLSearchParams(location.search);
+  //   const searchValue = params.get('search') || "";
+  //   setSearchQuery(searchValue); // Gán giá trị mặc định cho searchQuery
+  // }, [location.pathname]); //
 
   const handleBlur = () => {
     timeoutIdRef.current = setTimeout(() => {
@@ -176,28 +175,28 @@ const Header = () => {
 
   const debouncedSearchQuery = useDebounceKeySearch(searchQuery, 500);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (debouncedSearchQuery) {
-        try {
-          const response = await apiClient.get(`${ENDPOINTS.PRODUCTS}?search=${encodeURIComponent(debouncedSearchQuery)}`);
-          if (response?.record?.items.length > 0) {
-            setSearchResults(response.record.items);
-          } else {
-            setSearchResults([]);
-          }
-        } catch (error) {
-          setShowResults(false);
-          setSearchResults([]);
-        }
-      } else {
-        setShowResults(false);
-        setSearchResults([]);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (debouncedSearchQuery) {
+  //       try {
+  //         const response = await apiClient.get(`${ENDPOINTS.PRODUCTS}?search=${encodeURIComponent(debouncedSearchQuery)}`);
+  //         if (response?.record?.items.length > 0) {
+  //           setSearchResults(response.record.items);
+  //         } else {
+  //           setSearchResults([]);
+  //         }
+  //       } catch (error) {
+  //         setShowResults(false);
+  //         setSearchResults([]);
+  //       }
+  //     } else {
+  //       setShowResults(false);
+  //       setSearchResults([]);
+  //     }
+  //   };
 
-    fetchData();
-  }, [debouncedSearchQuery]);
+  //   fetchData();
+  // }, [debouncedSearchQuery]);
 
 
   const handleProductClick = (product) => {
