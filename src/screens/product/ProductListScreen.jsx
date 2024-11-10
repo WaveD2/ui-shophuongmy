@@ -9,7 +9,7 @@ import { breakpoints, defaultTheme } from "../../styles/themes/default";
 import ProductFilter from "../../components/product/ProductFilter";
 import { useEffect, useState } from "react";
 import ENDPOINTS from "../../api/endpoins";
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 import SavingZone from "../../components/home/SavingZone";
 import Pagination from "../../components/common/Pagination";
 import SelectOption from "../../components/common/SelectOption";

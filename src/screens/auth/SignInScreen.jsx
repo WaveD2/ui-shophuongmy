@@ -13,7 +13,7 @@ import { validateLogin, validateData } from "../../validate/validater";
 import { setUser } from "../../redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import { debounce } from 'lodash';
 import { tokenUtils } from "../../utils/token";

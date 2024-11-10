@@ -10,7 +10,7 @@ import ProductDescriptionTab from "../../components/product/ProductDescriptionTa
 import ProductSimilar from "../../components/product/ProductSimilar";
 import ProductServices from "../../components/product/ProductServices";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import { useDispatch } from "react-redux";
 import { addOrderProduct } from "../../redux/slices/orderSlice";

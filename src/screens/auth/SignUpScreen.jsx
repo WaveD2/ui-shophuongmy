@@ -15,7 +15,7 @@ import { useState } from "react";
 import { validateSignUp, validateData } from "../../validate/validater";
 import { tokenUtils } from "../../utils/token";
 import { useDispatch } from "react-redux";
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 import showToast from "../../utils/toast";
 

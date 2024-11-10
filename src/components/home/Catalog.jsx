@@ -3,7 +3,7 @@ import Title from "../common/Title";
 import { PropTypes } from "prop-types";
 import ProductList from "../product/ProductList";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 import ENDPOINTS from "../../api/endpoins";
 
 const Catalog = ({ catalogTitle, slugs }) => {

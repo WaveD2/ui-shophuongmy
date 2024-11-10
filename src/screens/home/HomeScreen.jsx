@@ -8,7 +8,7 @@ import Brands from "../../components/home/Brands";
 import Feedback from "../../components/home/Feedback";
 import { useEffect, useState } from "react";
 import ENDPOINTS from "../../api/endpoins";
-import { apiClient } from "../../api/axios";
+import { apiClient } from "../../api/apiService";
 
 const HomeScreenWrapper = styled.main``;
 
